@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "project": "Sparse and Robust PCA with Variable Projection",
+  "research_period_from_cv": "Jun-Oct 2025",
+  "release_type": "curated_source_statistics_and_figures",
+  "public_result_folder_style": "descriptive_without_execution_calendar_dates",
+  "measurement_and_figure_bytes": "preserved",
+  "random_seeds_and_algorithm_timing_metrics": "preserved",
+  "source_code": "preserved including historical version identifiers and compatibility paths",
+  "original_research_archive": "retained locally without modification",
+  "not_published": [
+    "Calendar-dated development notes and original execution protocols",
+    "Original protocol copies containing dated local archive paths",
+    "Execution logs and run timestamps",
+    "Downloaded genotype cohorts and participant-level predictions",
+    "Checkpoints, caches and local operational receipts",
+    "CV PDF and contact details",
+    "Unselected experiments and unrelated working-tree changes"
+  ],
+  "evidence_index": "resume_claims.json",
+  "source_only_validation": "make test-nonfed-unit",
+  "archive_dependent_validation": "make test-nonfed requires the separately retained original archive"
+}

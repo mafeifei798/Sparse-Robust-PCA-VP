@@ -1,0 +1,300 @@
+{
+  "artifacts": {
+    "github_style_current_pca": "github_style_current_pca.png",
+    "github_style_current_vp_spca": "github_style_current_vp_spca.png",
+    "no_refit_integrity_current_vp_spca": "integrity_current_vp_spca_no_refit.png",
+    "paper_style_combined": "paper_style_current_vp_spca_vs_pca.png",
+    "raw_arrays": "historical_github_current_fits_and_data.npz"
+  },
+  "config": {
+    "alpha": 10.0,
+    "dpi": 200,
+    "grid_size": 200,
+    "max_iter": 500,
+    "n_snapshots": 300,
+    "rank": 3,
+    "tol": 1e-06,
+    "total_time": 150.0
+  },
+  "data": {
+    "array_sha256": {
+      "X": "8ed4ba2a3cd690ba8ce93c6955678e2025ad220fe8e10f413f2bacc1263a76b7",
+      "X_uncentered": "c074dc0ed7759dde2ef797267e30e5494db55f4f532c5f3898d2ec92fedfad00",
+      "a_true": "b800afa694202cf6b5a33afd309e84d6ffa4ebe193268a85ededf3d920d4c6f9",
+      "a_true_centered": "19781af4107f81b32f3aeac6387afa700ed49cc00310bd1e2c26a3e4d50fcda6",
+      "pca_axes": "1d0e6090184e46585d285194981849f2087e48d95ca9ca6adb2f017de0ff5aaa",
+      "pca_display_scales": "6d868d2e0539956909f03f64ebbc73605832734893d62812b5cbaca0119051b2",
+      "pca_display_spatial_modes": "935f4fef39f132c1e4564dea9b8938a3f0ba94ce2dccd551906b24e508ed5475",
+      "pca_display_temporal_dynamics": "4a340c07c35dda8703484058ab8bb6a7e13c394ae1559fd26257ed46f5030402",
+      "pca_legacy_display_spatial_l2_norms": "4f4bff48979a7f6a14e7df92dda7ffd20b34086e3cb17dcbe6a85362c69bb858",
+      "pca_legacy_display_spatial_modes": "0d8cf36c0bc4c227b8c985a5611f03e10332d013ea0d11353a97ce655f9766db",
+      "pca_legacy_display_temporal_gauge": "30248b5babbd190282857a5485e17d6c7681eac02ba4c61cc79d819dfd094e95",
+      "pca_legacy_display_temporal_plot": "657b3a0cc1686170c0762a0f08321543d8d50159e728dc0231784276ce00b797",
+      "pca_legacy_display_truth_ls_scales": "f16e1f0dc35fa72deb368e17df4e042d5bff58a162d0437ff029e12181e2b36b",
+      "pca_loadings": "1d0e6090184e46585d285194981849f2087e48d95ca9ca6adb2f017de0ff5aaa",
+      "pca_permutation": "fb5e8992c614b1cc032f0c174b6f2d2303637db8eb894910741f92946dbe4f9d",
+      "pca_reconstruction": "8ef9bf3506bc313682a5589cd4271fb161e2c60d27811b562d7a6076271b7c4e",
+      "pca_signs": "0d841d788d91f3f7e44a54d499e484943c3f5bbc55c513bf0d29189b03659321",
+      "pca_spatial_modes": "58c873efcbbeef278de4c89ad0a999fd53efe86778054b72afaadf836ded1431",
+      "pca_temporal_dynamics": "1d0e6090184e46585d285194981849f2087e48d95ca9ca6adb2f017de0ff5aaa",
+      "phi_true": "f5637a993df66cc98aac574870ecd3cb8675594dc13628e920ce21eb1e54be8c",
+      "phi_true_flat": "303f6955002cb2660c41e277d4c3f702a7f219978dd414cf9a231db814a3e01c",
+      "time": "476110f34b2e2250a681517b7696e2737181873ef6b10ea1c85d81ffb0faf01d",
+      "vp_axes": "022973e5c094f6801b20e7caf23f515af371f1206465245af844629981eeeb55",
+      "vp_display_scales": "e8eeae4af4c98a627c03f5b75dfe9f322d80f3d170e85bc8b7a0cb773972180c",
+      "vp_display_spatial_modes": "23122ba9d1ab40bea6da9093e0439c06ff2e4eaf434b9516aea29477a621e027",
+      "vp_display_temporal_dynamics": "89b0987ea32be38f8c2072429800cecac022bdc2f92f9e37892ff971d7b739da",
+      "vp_legacy_display_spatial_l2_norms": "568d96599951e482b8e4199cdb1f1630320ab49d816a3d112f80217f26608bc4",
+      "vp_legacy_display_spatial_modes": "d3ff45ed9345d44505879f23d870a96975b419d914fe9d0b3ca28772e42bfab2",
+      "vp_legacy_display_temporal_gauge": "ed9cbc17128f56639f6475caf858c905581df5f3e2346df8a7f5b996cbd01182",
+      "vp_legacy_display_temporal_plot": "b5ebad3706c40d9df4dd301218841e067f7f22bd1efb92ad694c2b0bea9be65c",
+      "vp_legacy_display_truth_ls_scales": "05df65286045df44bb965d5222997f48e711d546cb6fcefbc07c14c435fb6149",
+      "vp_loadings": "ec06c29916e0147c4e09eca5e65d5cdedcd2c745cd1b8a3a7b67f61037c52c3c",
+      "vp_permutation": "fb5e8992c614b1cc032f0c174b6f2d2303637db8eb894910741f92946dbe4f9d",
+      "vp_reconstruction": "07faa4afd95f4f3bfb0d15ffb56fefdea80247863527042d0cb66db76384f82b",
+      "vp_signs": "0d841d788d91f3f7e44a54d499e484943c3f5bbc55c513bf0d29189b03659321",
+      "vp_spatial_modes": "80a562f3b535e82afed531179b37a5b3cd6b1105f323f8b2efe21476ff8a14c7",
+      "vp_temporal_dynamics": "022973e5c094f6801b20e7caf23f515af371f1206465245af844629981eeeb55"
+    },
+    "shape": [
+      40000,
+      300
+    ]
+  },
+  "display": {
+    "github_style_current_pca": {
+      "amplitude_refit_scope": "display-only temporal plotting copy",
+      "layout": "GitHub-style 2x3; spatial modes top, dynamics bottom",
+      "method": "PCA",
+      "native_fit_or_metrics_changed": false,
+      "spatial_colormap": "magma",
+      "spatial_gauge": "L2 norm transferred to temporal factor; reconstruction preserving",
+      "spatial_per_component_autoscale": true,
+      "truth_dependent_amplitude_refit": true,
+      "truth_ls_amplitude_scales": [
+        0.04718427894418191,
+        0.1123727687193989,
+        0.1124659971591999
+      ],
+      "truth_overlay": "raw generator truth, dashed"
+    },
+    "github_style_current_vp_spca": {
+      "amplitude_refit_scope": "display-only temporal plotting copy",
+      "layout": "GitHub-style 2x3; spatial modes top, dynamics bottom",
+      "method": "VP-SPCA",
+      "native_fit_or_metrics_changed": false,
+      "spatial_colormap": "magma",
+      "spatial_gauge": "L2 norm transferred to temporal factor; reconstruction preserving",
+      "spatial_per_component_autoscale": true,
+      "truth_dependent_amplitude_refit": true,
+      "truth_ls_amplitude_scales": [
+        0.047213878045143334,
+        0.11384841851574323,
+        0.11361567960853813
+      ],
+      "truth_overlay": "raw generator truth, dashed"
+    },
+    "no_refit_integrity_current_vp_spca": {
+      "display_gauge_preserves_reconstruction": true,
+      "layout": "2x3 integrity view",
+      "spatial_colormap": "magma",
+      "spatial_per_component_autoscale": true,
+      "temporal_shared_abs_limit": 2.044769525286125,
+      "truth_dependent_amplitude_refit": false,
+      "truth_overlay": "centered generator truth, dashed"
+    },
+    "paper_style_combined": {
+      "layout": "paper-style side-by-side 2x3 method blocks",
+      "methods": [
+        "VP-SPCA",
+        "PCA"
+      ],
+      "spatial_colormap": "custom white-pink-purple",
+      "spatial_per_component_autoscale": true,
+      "temporal_shared_abs_limit": 2.044769525286125,
+      "truth_overlay": false
+    }
+  },
+  "experiment": "current methods on exact historical GitHub smooth-video DGP",
+  "fit_metrics": {
+    "PCA": {
+      "alignment_reconstruction_relative_error": 2.4228358828543547e-17,
+      "clean_relative_reconstruction_error": 1.2803337930279378e-15,
+      "component_permutation": [
+        0,
+        2,
+        1
+      ],
+      "component_signs": [
+        -1,
+        1,
+        1
+      ],
+      "converged": true,
+      "display_gauge_reconstruction_relative_error": 8.83911939783329e-17,
+      "estimate_only_spatial_maxabs_scales": [
+        23.264835185180722,
+        11.237917178607699,
+        13.416169815934653
+      ],
+      "extra": {
+        "largest_singular_value": 493.06327670499576,
+        "solver": "scipy.linalg.eigh on exact snapshots Gram matrix"
+      },
+      "final_stationarity": null,
+      "loading_zero_fraction_at_1e-10": 0.0,
+      "n_iter": 1,
+      "objective_monotone_with_roundoff_tolerance": true,
+      "runtime_seconds": 0.10654079203959554,
+      "spatial_cosine_mean": 0.9956606839065937,
+      "spatial_cosine_per_component": [
+        0.9999849502527097,
+        0.9935040582367507,
+        0.9934930432303206
+      ],
+      "status": "closed-form rank-3 PCA from X.T @ X",
+      "temporal_cosine_mean": 0.995317453987882,
+      "temporal_cosine_per_component": [
+        0.9999991651332942,
+        0.9907618488509232,
+        0.9951913479794287
+      ],
+      "truth_dependent_amplitude_refit": false
+    },
+    "VP-SPCA": {
+      "alignment_reconstruction_relative_error": 2.7378206231076148e-17,
+      "clean_relative_reconstruction_error": 0.002848647794202695,
+      "component_permutation": [
+        0,
+        2,
+        1
+      ],
+      "component_signs": [
+        -1,
+        1,
+        1
+      ],
+      "converged": false,
+      "display_gauge_reconstruction_relative_error": 8.964355394635835e-17,
+      "estimate_only_spatial_maxabs_scales": [
+        23.24465265088418,
+        11.211658857590965,
+        13.391749402757075
+      ],
+      "extra": {
+        "alpha": 10.0,
+        "backtracking": true,
+        "initialization": "PCA",
+        "step_size": 4.113340720530293e-06,
+        "step_size_policy": "1 / largest_singular_value**2"
+      },
+      "final_stationarity": 87.738050034296,
+      "loading_zero_fraction_at_1e-10": 0.43222222222222223,
+      "n_iter": 500,
+      "objective_monotone_with_roundoff_tolerance": true,
+      "runtime_seconds": 19.64474062505178,
+      "spatial_cosine_mean": 0.9978676555332601,
+      "spatial_cosine_per_component": [
+        0.9999863776438903,
+        0.9965348489599254,
+        0.9970817399959646
+      ],
+      "status": "maximum iterations reached",
+      "temporal_cosine_mean": 0.999353640674263,
+      "temporal_cosine_per_component": [
+        0.9997569931459805,
+        0.9983812084745017,
+        0.9999227204023066
+      ],
+      "truth_dependent_amplitude_refit": false
+    }
+  },
+  "historical_default_hash_contract": {
+    "actual": {
+      "X": "8ed4ba2a3cd690ba8ce93c6955678e2025ad220fe8e10f413f2bacc1263a76b7",
+      "a_true": "b800afa694202cf6b5a33afd309e84d6ffa4ebe193268a85ededf3d920d4c6f9",
+      "phi_true": "f5637a993df66cc98aac574870ecd3cb8675594dc13628e920ce21eb1e54be8c",
+      "time": "476110f34b2e2250a681517b7696e2737181873ef6b10ea1c85d81ffb0faf01d"
+    },
+    "applies_to_this_grid": true,
+    "expected": {
+      "X": "8ed4ba2a3cd690ba8ce93c6955678e2025ad220fe8e10f413f2bacc1263a76b7",
+      "a_true": "b800afa694202cf6b5a33afd309e84d6ffa4ebe193268a85ededf3d920d4c6f9",
+      "phi_true": "f5637a993df66cc98aac574870ecd3cb8675594dc13628e920ce21eb1e54be8c",
+      "time": "476110f34b2e2250a681517b7696e2737181873ef6b10ea1c85d81ffb0faf01d"
+    },
+    "verified": true
+  },
+  "paper_scale_dimensions": true,
+  "protocol": {
+    "clean_only": true,
+    "endpoint_convention_differs_from_paper_text": true,
+    "estimate_only_display_gauge": "spatial maxabs scale transferred to temporal factor",
+    "generator": "operation-for-operation port of commit e01c02f default generate_multiscale_video",
+    "methods": [
+      "VP-SPCA",
+      "PCA"
+    ],
+    "native_fit_truth_dependent_amplitude_refit": false,
+    "not_exact_paper_data": true,
+    "orientation": "spatial_pixels_x_time_snapshots",
+    "paper_text_says_dt_seconds": 0.5,
+    "primary_historical_display_amplitude_refit_scope": "display-only temporal plotting copy; never native fit, reconstruction, or metrics",
+    "primary_historical_display_truth_dependent_amplitude_refit": true,
+    "realized_time_step_seconds": 0.5016722408026756,
+    "result_driven_tuning": false,
+    "separate_from_corrupted_robust_study": true,
+    "time_formula": "np.linspace(0.0, 150.0, 300)",
+    "truth_alignment": "Hungarian permutation and sign only",
+    "vp_parameters_frozen_from_historical_comparison": true,
+    "vp_solver": "current rspca.vp.fit_vp_spca"
+  },
+  "protocol_identity": "exact commit e01c02f default smooth GitHub generator with current VP-SPCA and PCA; clean Figure-5-style task; not exact paper data",
+  "provenance": {
+    "current_executed_source": {
+      "experiments/video_figure5_historical_github_current.py": {
+        "role": "runner",
+        "sha256": "cdd0ad2ca07eb050f3f6aa71561c802a59eec67d200f0999c85c146d5e8389e0"
+      },
+      "experiments/video_figure5_paper_style.py": {
+        "role": "shared_fit_and_gauge_helpers",
+        "sha256": "a83c0ff990a276286cd67fee0d84e44e236d5adaa0b2857b2d2959095688c6a7"
+      },
+      "src/rspca/datasets.py": {
+        "role": "array_hash_and_runtime_provenance",
+        "sha256": "4b72f51579616bf91b8bbdb4929d2caa41a330c3b104d42de5fa4e501532e154"
+      },
+      "src/rspca/metrics.py": {
+        "role": "reconstruction_metric",
+        "sha256": "35f3be948cac70d34c1e180a7684f1e5c4c30d1b291fbd956d010d784c864dda"
+      },
+      "src/rspca/vp.py": {
+        "role": "current_vp_spca_solver",
+        "sha256": "88a84aa99825357f3a16650bf3e56bfef54a850aa17880342334ba7ad402b953"
+      }
+    },
+    "git_head": "03f4b432e5d552a9772cfb251fe06f33833b4197",
+    "historical_git_commit": "e01c02f7cbe1eaedc8f5262a4ca9ec4f54db84fa",
+    "historical_sources": {
+      "spca_multiscale_video.py": {
+        "expected_sha256": "e6222e19b2423a63f7ff4fce8eb370b4037372d40668c09b25c3702ca686bc56",
+        "local_git_object_sha256": "e6222e19b2423a63f7ff4fce8eb370b4037372d40668c09b25c3702ca686bc56",
+        "verified": true
+      },
+      "spca_video_comparison.py": {
+        "expected_sha256": "d06fc8c78562baa5b4adeda0014d1983990c920d615f9faba172802af638c2e7",
+        "local_git_object_sha256": "d06fc8c78562baa5b4adeda0014d1983990c920d615f9faba172802af638c2e7",
+        "verified": true
+      }
+    },
+    "runtime_versions": {
+      "machine": "arm64",
+      "numpy": "2.1.3",
+      "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O",
+      "python": "3.13.5",
+      "scipy": "1.15.3",
+      "vp_rspca": "0.2.0"
+    }
+  },
+  "schema_version": 1
+}

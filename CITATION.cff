@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite this repository and the method papers listed in README.md."
+title: "Sparse and Robust PCA with Variable Projection"
+type: software
+authors:
+  - name: "mafeifei798"
+repository-code: "https://github.com/mafeifei798/Sparse-Robust-PCA-VP"
+version: 0.2.0
+license: MIT

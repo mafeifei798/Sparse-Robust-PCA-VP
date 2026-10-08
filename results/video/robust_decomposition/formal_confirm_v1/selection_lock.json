@@ -1,0 +1,188 @@
+{
+  "confirmation_parameter_overrides_allowed": false,
+  "confirmation_seed_manifest_sha256": "dcc4e283631dfa993abe6d676ad74a6d9fcdf06a3c62e1b4ffa28d2aedadbb54",
+  "confirmation_truth_used_for_tuning": false,
+  "development_evidence_sha256_without_runtime": "fce5b4a9b53fd78569ec11672cf0fe00550832deeb2c92b25a8ed6155fbaf103",
+  "development_seed_manifest_sha256": "b407a83e1d6f3d6cf8cd3472091be95fffc6a54cc5a5359044fee28cb186bccf",
+  "lock_kind": "paper_video_robust_development_selection_lock",
+  "paper_scale": true,
+  "schema_version": 1,
+  "selected_parameters": {
+    "alpha": 0.0015,
+    "kappa": 0.001
+  },
+  "selection_lock_sha256": "c3bcf4a867c02c16044b162cbf0d8bf337007b4beb10d831a409567b171eab89",
+  "source_sha256": {
+    "experiments/video_spca_paper_reproduction.py": "d9c891dc26ad558173ce7d8b8ea0e71c48d288918d7c02928e755a503c6fde61",
+    "experiments/video_spca_paper_robust_study.py": "de05ed13fe14b58c6a8e6020bc08f08f3c35b7e22a7b2341630bbb810cad3cc8",
+    "src/rspca/__init__.py": "6c3a3390615a3095765da76852479bd00464ff6c1785c73ca3900f5e8a23afcf",
+    "src/rspca/accelerated.py": "594b17a826c0416f4f1b09b0c3228369a73e88a5c1ed80184ddfb09b7c5afcb7",
+    "src/rspca/cross_modal_gates.py": "66dbba41957bfa9c4d664c7421caae0d62ce50f070a989eae94445144e65e34e",
+    "src/rspca/datasets.py": "4b72f51579616bf91b8bbdb4929d2caa41a330c3b104d42de5fa4e501532e154",
+    "src/rspca/federated.py": "70e9a617107f41caaf26e21b77e124331be02752e809b0e658f03b10fdc91b9a",
+    "src/rspca/fedrpca_audit.py": "4d3c494bce0d452ce8c471a627726009cee4d7ee56e7e5b32f0f0fce69eceab1",
+    "src/rspca/gauge.py": "5c3d23a80a8c769ead6932794be64a541a79ae755334d843f00d83c2354c7a42",
+    "src/rspca/gauge_stress.py": "1b67d46dea21c2a9d8c4deb669d62927c8488c7e80c451dbaaed2b541918bc1f",
+    "src/rspca/metrics.py": "35f3be948cac70d34c1e180a7684f1e5c4c30d1b291fbd956d010d784c864dda",
+    "src/rspca/product_aggregation.py": "a15dcbd2113c256862bf8c8b609e9fc1888394f974106c3db7f03c2bfbf5d764",
+    "src/rspca/randomized.py": "706a05cc1f29dcabd34e63f1968fcda378984838d85bace15d6d5539d2a2a046",
+    "src/rspca/robust.py": "ad312a71c01cb57749aa3bb1e8357adec434709ff93639997821cfb116df2106",
+    "src/rspca/statistical_gates.py": "4b9780bdd4f59be4890d6dc467849a54eeb844edbccc52ba754674ce6606b9b5",
+    "src/rspca/trust_audit.py": "06f6497d08315e1112a8b7e7e0c048952a1da2f87f27110e23279f42c900ac2b",
+    "src/rspca/vp.py": "cae985e15e87d5ebf88c9c68c7570ed10832df30ec1245b7b8031def2bd6b9c8"
+  },
+  "study_protocol": {
+    "comparators": [
+      "PCA",
+      "origin_main_legacy_dynamic_kappa_changing_objective",
+      "locked_single_start",
+      "direct_multistart_equal_budget",
+      "B_only_descending_kappa_multistart"
+    ],
+    "config": {
+      "alpha_grid": [
+        0.0015,
+        0.003,
+        0.006
+      ],
+      "bootstrap_draws": 10000,
+      "bootstrap_seed": 63001,
+      "catastrophic_frame_threshold": 2.0,
+      "confirmation_seeds": [
+        51001,
+        51002,
+        51003,
+        51004,
+        51005,
+        51006,
+        51007,
+        51008,
+        51009,
+        51010,
+        51011,
+        51012,
+        51013,
+        51014,
+        51015,
+        51016,
+        51017,
+        51018,
+        51019,
+        51020
+      ],
+      "continuation_kappa_multipliers": [
+        4.0,
+        1.0
+      ],
+      "continuation_stage_max_iters": [
+        40,
+        160
+      ],
+      "corruption_fraction": 0.05,
+      "corruption_scale": 3.0,
+      "development_seeds": [
+        123,
+        1123,
+        2123
+      ],
+      "dpi": 150,
+      "grid_size": 200,
+      "kappa_grid": [
+        0.001,
+        0.002,
+        0.005
+      ],
+      "legacy_dynamic_alpha": 0.012,
+      "legacy_dynamic_max_iter": 500,
+      "legacy_dynamic_tol": 1e-06,
+      "legacy_huber_tau": 1.0,
+      "legacy_kappa_max": 0.04,
+      "legacy_kappa_min": 0.005,
+      "loading_nonzero_threshold": 1e-10,
+      "max_iter_per_start": 200,
+      "maximum_true_budget_f1_decrease": 0.02,
+      "minimum_confirmation_convergence_fraction": 0.95,
+      "minimum_loading_nonzero_fraction": 0.0001,
+      "minimum_primary_win_fraction": 0.8,
+      "minimum_reconstruction_to_observed_norm": 0.001,
+      "n_components": 3,
+      "n_timesteps": 300,
+      "perturbation_scales": [
+        0.05,
+        0.2
+      ],
+      "perturbation_seeds": [
+        62001,
+        62002
+      ],
+      "random_orthogonal_seed": 61001,
+      "representative_frame_index": 100,
+      "tol": 1e-06,
+      "total_time": 150.0
+    },
+    "continuation": {
+      "A_and_S_reinitialized_each_stage": true,
+      "direct_and_continuation_equal_allocated_iterations_per_start": true,
+      "intermediate_objectives_used_for_winner_selection": false,
+      "state_handoff": "B only"
+    },
+    "exact_origin_main_before": {
+      "alpha": 0.012,
+      "changing_objective": true,
+      "eligible_for_fixed_target_objective_selection": false,
+      "kappa_policy": "per-iteration residual MAD times huber_tau, clipped to [legacy_kappa_min, legacy_kappa_max]",
+      "role": "same-seed historical before baseline",
+      "source_commit": "e01c02f7cbe1eaedc8f5262a4ca9ec4f54db84fa",
+      "source_path": "robust_spca_vp.py",
+      "source_sha256": "eac1b41bd1fb27d5542cf42d3cb05e1498ebbc3be57616efe1fa112133ac4692",
+      "stopping": "B-change Frobenius norm"
+    },
+    "historical_v1_anchor": {
+      "alpha": 0.012,
+      "corruption_seed": 123,
+      "kappa": 0.005,
+      "max_iter": 500,
+      "role": "viewed development anchor; not rerun as confirmation"
+    },
+    "phase_boundary": {
+      "confirmation_seed_bank_untouched_when_lock_created": true,
+      "confirmation_tuning": false,
+      "development_truth_use": "alpha/kappa selection only"
+    },
+    "protocol_version": 1,
+    "start_specs": [
+      {
+        "kind": "pca",
+        "perturbation_scale": null,
+        "random_seed": null,
+        "start_id": "pca"
+      },
+      {
+        "kind": "fixed_random_orthogonal",
+        "perturbation_scale": null,
+        "random_seed": 61001,
+        "start_id": "random_orthogonal"
+      },
+      {
+        "kind": "pca_perturbation",
+        "perturbation_scale": 0.05,
+        "random_seed": 62001,
+        "start_id": "pca_perturb_1"
+      },
+      {
+        "kind": "pca_perturbation",
+        "perturbation_scale": 0.2,
+        "random_seed": 62002,
+        "start_id": "pca_perturb_2"
+      }
+    ],
+    "within_arm_selection": {
+      "convergence_used": false,
+      "input": "observed normalized X and final target robust objective only",
+      "nontrivial_gate_used": false,
+      "tie_break": "declared start order",
+      "truth_used": false
+    }
+  },
+  "study_protocol_sha256": "5e17e1769c012466ee7553c56193b7d90545cce748cb0d893ef75b6f49cefc00"
+}

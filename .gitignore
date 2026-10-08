@@ -1,0 +1,25 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+dist/
+build/
+
+# Generated experiment artifacts and downloaded data
+artifacts/
+data/
+checkpoints/
+*.npz
+*.npy
+*_features.pt
+*_features.npz
+
+# Notebook/editor state
+.ipynb_checkpoints/
+.idea/
+.vscode/
+

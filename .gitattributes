@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Preserve hash-bound research artifacts byte for byte.
+results/** -text

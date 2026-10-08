@@ -1,80 +1,128 @@
-# Variable Projection SPCA Toolkit
+# Sparse and Robust PCA with Variable Projection
 
-## Project Overview
+University of Macau summer research | Jun-Oct 2025
 
-This repository collects a series of prototype implementations and experiments on sparse principal component analysis (SPCA) built around the variable projection paradigm. Besides the baseline VP-SPCA solver, it includes variants that target robustness, randomized acceleration, FISTA-style momentum, and adaptive regularization. The codebase also ships with simulation scripts, analysis notebooks, and pre-rendered figures that showcase modelling skills and experimental design.
+Code and reproducible evidence for the sparse and robust PCA project described
+in the research CV. The project summary follows the CV's title, research period,
+and three contributions.
 
-## Highlights
+## Project summary
 
-- **Variable-projection SPCA**: `spca_variable_projection.py` implements the VP-SPCA proximal updates together with a non-stationarity monitor.
-- **Robust / randomized extensions**: `robust_spca_vp.py` separates sparse outliers, while `randomized_spca_vp.py` leverages randomized range finding for scalability.
-- **Acceleration studies**: `spca_variable_projection_fista_bt.py` and `spca_variable_projection_fista_bt_torch.py` add FISTA momentum plus backtracking; the `spca_variable_projection_vs_*` scripts compare different strategies.
-- **Multiscale video case study**: `spca_multiscale_video.py` synthesizes a multiscale video to visualize recovered spatial modes and temporal activations.
-- **Federated & large-scale notebooks**: `fedrpca-*.ipynb` and `gene*.ipynb` document experiments on satellite, remote sensing and gene-expression datasets.
-- **Ready-to-use visuals**: multiple PNG files illustrate convergence behavior, performance comparisons, and recovered structures.
+- Optimized VP-SPCA for sparse dimensionality reduction using restarted FISTA,
+  backtracking, and matrix-free randomized sketches. On corrupted synthetic
+  data, accelerated VP-SPCA reduced subspace error by 30.7% versus default
+  scikit-learn PCA.
+- Recovered three interpretable spatial modes and temporal dynamics in clean
+  synthetic video. Huber-based Robust VP-SPCA separated low-rank structure from
+  sparse corruption and reduced clean reconstruction error by about 22% versus
+  PCA in the separate corrupted-video experiment.
+- Developed a randomized VP-SPCA pipeline for 1000 Genomes, retaining strong
+  population separation with 5% of 455,102 SNPs while reducing modeling workflow
+  time by 29.1% versus all-SNP PCA across 20 paired splits.
 
-## Repository Tour
+## Code and results for the three contributions
 
-- `spca_variable_projection.py`: core VP-SPCA algorithm and demo.
-- `robust_spca_vp.py`: robust VP-SPCA with explicit sparse outlier estimates.
-- `randomized_spca_vp.py`: randomized variable projection plus multiscale video demo.
-- `spca_variable_projection_fista_bt.py` / `_torch.py`: FISTA + backtracking variants (NumPy / PyTorch backends).
-- `spca_multiscale_video.py`: data generator and visualization utilities.
-- `spca_video_comparison.py`: compares PCA, VP-SPCA, and randomized VP-SPCA.
-- `spca_variable_projection_vs_adaptive_compare.py`, `spca_variable_projection_vs_fista_compare.py`: benchmark different algorithmic variants.
-- `*.ipynb`: notebooks covering federated RPCA and gene-expression experiments.
-- `*.png`: publication-ready plots and reconstructions.
+| Contribution | Code | Results and figures |
+| --- | --- | --- |
+| VP-SPCA optimization and synthetic recovery | [Restarted FISTA and backtracking](src/rspca/accelerated.py), [matrix-free randomized solver](src/rspca/randomized.py) | [Paired statistics](results/synthetic/default_pca_comparison/paired_replay/summary.json), [per-seed records](results/synthetic/default_pca_comparison/paired_replay/records.json) |
+| Clean-video modes and robust separation | [VP-SPCA](src/rspca/vp.py), [Huber-based robust solver](src/rspca/robust.py) | [Native three-mode figure](results/video/clean_modes/historical_github_current_v2/integrity_current_vp_spca_no_refit.png), [clean-video report](results/video/clean_modes/historical_github_current_v2/historical_github_current_report.json), [reconstruction frames](results/video/robust_decomposition/presentation_figures/reconstruction_selected_frames.png), [20-seed robust report](results/video/robust_decomposition/formal_confirm_v1/confirmation_report.json) |
+| Own-VP SNP selection and population stratification | [SNP selection and independent refit](experiments/genomics_randomized_vp_selected5.py) | [20-split statistics](results/genomics/selected_snps/paired_20seeds/summary.json), [PC1-PC2](results/genomics/selected_snps/paired_20seeds/seed_2025/pc12.png), [PC3-PC4](results/genomics/selected_snps/paired_20seeds/seed_2025/pc34.png), [metrics and limitations](resume_claims.json) |
 
-## Environment Setup
+Exact calculations, experiment scopes, source hashes, and limitations are
+indexed in [resume_claims.json](resume_claims.json). Public headline percentages
+are rounded summaries; the original reports retain the underlying measurements.
+The project period above describes the CV research experience. Detailed
+execution records remain in the local research archive. The CV PDF and personal contact
+details are not included in the publication subset. FedRPCA, DML, and protein
+post-training are separate CV projects, not additional claims of this SPCA summary.
 
-Python 3.10+ is recommended. Create a virtual environment and install core dependencies:
+## Install and run
+
+Python 3.11 or newer is required.
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate         # On Windows use .venv\Scripts\activate
-pip install numpy scipy matplotlib scikit-learn torch
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e '.[experiments,dev]'
+make test-nonfed-unit
+make smoke-nonfed
 ```
 
-> Some notebooks additionally rely on packages such as `pandas`, `seaborn`, or `torchvision`. Install them on demand following each notebook’s instructions.
+The source-only tests and smoke commands do not require the original
+1000 Genomes cohort. The smoke input is generated by
+`tools/generate_genomics_smoke_data.py` and must not be interpreted
+as the reported population-stratification experiment.
 
-## Quick Start
+For the maintained notebooks and optional PyTorch backend:
 
-1. **VP-SPCA demo**
-   ```bash
-   python spca_multiscale_video.py
-   ```
-   Produces `multiscale_spca_6_1_results.png` and `multiscale_spca_6_1_convergence.png`, illustrating recovered spatial modes and convergence diagnostics.
+```bash
+python -m pip install -e '.[experiments,torch,notebooks,dev]'
+python tools/execute_nonfed_notebooks.py
+```
 
-2. **Compare algorithmic variants**
-   ```bash
-   python spca_video_comparison.py
-   python spca_variable_projection_vs_adaptive_compare.py
-   python spca_variable_projection_vs_fista_compare.py
-   ```
-   These scripts save multiple comparison plots (for example `spca_video_compare.png`, `alg41_vs_adaptive_time.png`) and print timing plus reconstruction error in the console.
+### Minimal example
 
-3. **Randomized / robust variants**
-   ```bash
-   python randomized_spca_vp.py
-   python spca_multiscale_video.py       # includes the robust VP-SPCA call
-   ```
-   Observe how randomized and robust strategies behave on high-dimensional video data.
+Rows are samples and columns are features. Center features before fitting.
 
-4. **Deep learning backend (optional)**
-   To run the FISTA + Torch implementation on GPU or Apple MPS, install the matching PyTorch build and execute:
-   ```bash
-   python spca_variable_projection_vs_fista_compare.py
-   ```
-   The script auto-detects `cuda` and `mps` devices when available.
+```python
+import numpy as np
+from rspca import fit_accelerated_vp_spca
 
-## Jupyter Notebooks
+rng = np.random.default_rng(42)
+X = rng.normal(size=(120, 40))
+X -= X.mean(axis=0, keepdims=True)
+result = fit_accelerated_vp_spca(X, n_components=3, alpha=0.1)
+X_hat = X @ result.B @ result.A.T
+print(result.status, result.n_iter)
+```
 
-- `fedrpca-eurosat-3.ipynb`, `fedrpca-svhn.ipynb`: federated / distributed RPCA experiments on satellite imagery, and vision datasets.
-- `gene.ipynb`, `gene large scale.ipynb`: RPCA/SPCA analysis on gene-expression matrices.
-- Before committing or sharing, consider clearing notebook outputs to keep revisions focused on final figures and conclusions. Follow the dependency and data-download hints at the top of each notebook when reproducing experiments.
+## Published evidence and archive scope
 
-## Result Figures
+This is a curated source-and-summary release, not a full raw-data archive.
+[publication_scope.json](publication_scope.json) records the publication boundary.
 
-Representative PNG files such as `robust_spca_vp_fig6.png`, and `spca_video_compare.png` are included for immediate presentation.
+- Synthetic recovery: paired summaries and per-seed synthetic records.
+- Clean video: the native-fit report and the no-refit three-mode figure.
+- Robust video: the sealed confirmation report and selected reconstruction
+  figures, with paired confirmation cases retained.
+- Genomics: all predeclared penalty summaries across 20 paired splits, the
+  comparison definitions in the evidence index, and figures for the first
+  registered split.
+  The selected panel is discovered from VP's own loadings and independently
+  refit by VP, rather than screened by PCA.
+- Closed negative results remain supplementary and are not substituted for
+  the three headline experiments.
 
+Public result folders use descriptive names without execution dates.
+Included numeric reports, paired records, and scientific figures retain their
+original bytes. Calendar-dated notes, execution logs, and protocols containing
+local archive paths are kept locally rather than published.
+Downloaded genotypes, participant-level arrays and predictions, checkpoints,
+and the CV PDF are not included.
 
+The broad `make test-nonfed` target includes archive-dependent tests
+and requires those separately retained research fixtures. The GitHub workflow
+uses `make test-nonfed-unit` and synthetic smoke inputs instead.
+
+## Interpretation
+
+The headline results describe specific paired evaluations, not universal
+superiority. Clean-video mode recovery and corrupted-video reconstruction are
+separate tasks. The selected-5% genomics pipeline approaches all-SNP PCA
+stratification quality but is not lossless: balanced accuracy is 97.475%
+versus 98.175%, and AMR recall is lower. Fixed-budget nonconvergence and the
+negative cleaned-encoder results remain visible in the original reports.
+
+Published algorithm families are credited to their source papers. This
+repository contributes implementations, optimization engineering, controlled
+comparisons, and analysis of successes and limitations; it does not claim
+to have invented variable-projection SPCA.
+
+## References and license
+
+- N. B. Erichson et al.,
+  [Sparse Principal Component Analysis via Variable Projection](https://arxiv.org/abs/1804.00341).
+
+Released under the [MIT License](LICENSE).
+Citation metadata is available in [CITATION.cff](CITATION.cff).

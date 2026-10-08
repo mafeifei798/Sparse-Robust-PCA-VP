@@ -1,0 +1,35 @@
+{
+  "files": {
+    "confirmation_cases.csv": {
+      "sha256": "2c014b654bf1ecd99db3795b7965e4b892709246eb4ce0e0208df5ca5737a040",
+      "size_bytes": 32603
+    },
+    "confirmation_full_frame_errors.csv": {
+      "sha256": "da3e5c07f90e9a1a10e631b467922a902a01b3e3d71d82a308f93b95e4ad0641",
+      "size_bytes": 1962511
+    },
+    "confirmation_report.json": {
+      "sha256": "727a2187c10fd7f33a20cab0b55e36d9a2bca79b9ddba5d2ffce2e8322217d9f",
+      "size_bytes": 2241475
+    },
+    "confirmation_representative_and_worst_frames.png": {
+      "sha256": "32a1ec4a15ee0c9a33ff5f8bb7bce0fb252ca94bb180512b44af4ac63d296468",
+      "size_bytes": 1166548
+    },
+    "selection_lock.json": {
+      "sha256": "b025312dfa18b18e0d5847fb11bdaf5dfb8aad02aed1a6444ae6166561e26a2c",
+      "size_bytes": 6734
+    }
+  },
+  "manifest_kind": "paper_video_robust_confirmation_exact_closure",
+  "manifest_sha256": "61ad1b8c8e01c4ef91fbc7cee2c7be708d9a181962cca2dab89b8bf14a30a88f",
+  "required_payloads": [
+    "confirmation_cases.csv",
+    "confirmation_full_frame_errors.csv",
+    "confirmation_report.json",
+    "confirmation_representative_and_worst_frames.png",
+    "selection_lock.json"
+  ],
+  "schema_version": 1,
+  "self_excluding": true
+}
