@@ -54,6 +54,10 @@ def test_default_generator_matches_commit_e01c02f_array_hashes() -> None:
     }
 
     assert actual == EXPECTED_DEFAULT_ARRAY_SHA256
+
+
+def test_default_generator_preserves_shapes_centering_and_time_step() -> None:
+    dataset, phi_true, a_true = generate_exact_historical_github_dataset()
     assert dataset.data.shape == (40000, 300)
     assert phi_true.shape == (3, 200, 200)
     assert a_true.shape == (3, 300)
