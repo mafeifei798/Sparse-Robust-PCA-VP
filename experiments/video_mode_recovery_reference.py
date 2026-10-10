@@ -1,9 +1,8 @@
-"""Current VP-SPCA reconstruction of the paper's Figure-5 visual task.
+"""Reference experiment for spatial-mode recovery and temporal dynamics.
 
-This is a clean, rank-three, 200 x 200 x 300 synthetic-video experiment.  It
-exists to answer a narrow visual question: what does the repository's current
-VP-SPCA implementation look like on the same *kind* of mode-and-dynamics panel
-shown in Figure 5 of Erichson et al.?
+This clean, rank-three, 200 x 200 x 300 synthetic-video experiment evaluates
+spatial modes and temporal dynamics using the dimensions reported in Figure 5
+of Erichson et al.
 
 The paper fixes the dimensions (200 x 200 pixels, 300 snapshots, dt=.5 s) but
 does not publish its generating arrays or complete formulas.  Therefore the
@@ -739,7 +738,7 @@ def _git_bytes(repo_root: Path, arguments: Sequence[str]) -> bytes | None:
 
 def _source_provenance(repo_root: Path) -> dict[str, Any]:
     roles = {
-        "experiments/video_figure5_paper_style.py": "experiment_runner",
+        "experiments/video_mode_recovery_reference.py": "experiment_runner",
         "src/rspca/vp.py": "current_vp_spca_solver",
         "src/rspca/datasets.py": "array_and_runtime_provenance",
         "src/rspca/metrics.py": "reconstruction_metric",

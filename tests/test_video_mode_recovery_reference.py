@@ -9,7 +9,7 @@ import subprocess
 import numpy as np
 import pytest
 
-from experiments.video_figure5_paper_style import (
+from experiments.video_mode_recovery_reference import (
     COMBINED_FIGURE_NAME,
     GITHUB_FIGURE_NAME,
     MANIFEST_NAME,

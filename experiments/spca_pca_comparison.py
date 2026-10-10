@@ -1,4 +1,4 @@
-"""Source-faithful ordinary-PCA supplement; all inputs and sparse fits are paired."""
+"""Paired comparison of default PCA and sparse PCA implementations."""
 
 import argparse
 from contextlib import contextmanager
@@ -258,7 +258,7 @@ def summarize(records, resamples=100000):
 
 def render_report(output, summary, reproduction, identities):
     lines = ["# Ordinary PCA versus the original VP-SPCA implementations", "",
-        "This requested baseline supplement uses all 12 original seeds in both regimes. "
+        "This paired comparison includes all 12 registered seeds in both regimes. "
         "Every comparison uses locally regenerated, saved inputs and newly refitted methods. "
         "Historical remote VP metrics are never used as the numerator of a new PCA contrast.", "",
         "Main control: `PCA(n_components=5)`, all other sklearn 1.7.0 defaults unchanged. "
@@ -337,7 +337,7 @@ def run(output, protocol):
                 for name, (relative, _) in SOURCE_BINDINGS.items():
                     archive.write(ROOT/relative, f"historical_rspca/{name}.py")
                 archive.writestr("historical_rspca/__init__.py", "# Isolated historical module namespace.\n")
-                archive.write(Path(__file__), "spca_default_pca_addendum.py")
+                archive.write(Path(__file__), "spca_pca_comparison.py")
                 archive.write(protocol, "PROTOCOL.md")
                 for regime in history:
                     archive.write(HISTORY/f"spca/{regime}/results.json", f"history/{regime}.json")

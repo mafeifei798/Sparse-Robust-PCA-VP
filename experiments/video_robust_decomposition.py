@@ -1,7 +1,7 @@
-"""Development/confirmation study for paper-layout robust video separation.
+"""Development and confirmation study of robust synthetic-video decomposition.
 
-This module is deliberately separate from
-``video_spca_paper_reproduction.py`` and never overwrites its v1 artifacts.
+This study is separate from ``video_decomposition_reference.py`` and preserves
+the reference experiment's saved outputs.
 It retains the historical GitHub construction and orientation
 ``X = spatial pixels x time snapshots`` with ``Phi = X @ B``.  The solver is
 the repository's existing :func:`rspca.robust.fit_robust_vp_spca`;
@@ -44,7 +44,7 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy import linalg
 
-from experiments.video_spca_paper_reproduction import (
+from experiments.video_decomposition_reference import (
     ARXIV_ID,
     ARXIV_PDF_SHA256,
     ARXIV_VERSION,
@@ -1234,8 +1234,8 @@ def _executed_source_provenance(repo_root: Path) -> dict[str, Any]:
     """Bind the runner, its imported reproduction helper, and eager rspca tree."""
 
     direct_roles = {
-        "experiments/video_spca_paper_robust_study.py": "robust_study_runner",
-        "experiments/video_spca_paper_reproduction.py": (
+        "experiments/video_robust_decomposition.py": "robust_study_runner",
+        "experiments/video_decomposition_reference.py": (
             "historical_video_generator_and_shared_metrics"
         ),
         "src/rspca/datasets.py": "hashing_and_runtime_provenance",
@@ -1244,14 +1244,14 @@ def _executed_source_provenance(repo_root: Path) -> dict[str, Any]:
         "src/rspca/vp.py": "solver_dependency_and_package_api",
     }
     allowed_experiment_modules = {
-        "experiments.video_spca_paper_reproduction",
-        "experiments.video_spca_paper_robust_study",
+        "experiments.video_decomposition_reference",
+        "experiments.video_robust_decomposition",
         "__main__",
     }
     by_path: dict[str, dict[str, Any]] = {}
     study_path = Path(__file__).resolve()
     reproduction_path = (
-        repo_root / "experiments/video_spca_paper_reproduction.py"
+        repo_root / "experiments/video_decomposition_reference.py"
     ).resolve()
     for module_name, module in sorted(sys.modules.items()):
         raw_path = getattr(module, "__file__", None)
@@ -1327,7 +1327,7 @@ def _executed_source_provenance(repo_root: Path) -> dict[str, Any]:
             },
             "current_repository_calls": {
                 "exact_historical_before_port": (
-                    "experiments.video_spca_paper_robust_study."
+                    "experiments.video_robust_decomposition."
                     "_fit_legacy_dynamic_kappa_exact"
                 ),
                 "development_and_confirmation_solver": (
@@ -1335,7 +1335,7 @@ def _executed_source_provenance(repo_root: Path) -> dict[str, Any]:
                 ),
                 "objective_recomputation": "rspca.robust.robust_objective",
                 "generator": (
-                    "experiments.video_spca_paper_reproduction."
+                    "experiments.video_decomposition_reference."
                     "generate_figure6_dataset"
                 ),
             },

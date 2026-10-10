@@ -8,7 +8,7 @@ import subprocess
 import numpy as np
 import pytest
 
-from experiments.video_figure5_historical_github_current import (
+from experiments.video_clean_mode_recovery import (
     COMBINED_FIGURE_NAME,
     EXPECTED_DEFAULT_ARRAY_SHA256,
     INTEGRITY_FIGURE_NAME,

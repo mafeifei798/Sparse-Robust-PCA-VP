@@ -10,7 +10,7 @@ import subprocess
 import numpy as np
 import pytest
 
-from experiments.video_spca_paper_reproduction import (
+from experiments.video_decomposition_reference import (
     ARXIV_ID,
     ARXIV_VERSION,
     FIGURE5_NAME,

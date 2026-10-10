@@ -1,4 +1,4 @@
-"""Run current VP-SPCA on the exact historical GitHub smooth-video DGP.
+"""Evaluate VP-SPCA mode recovery on the source-locked smooth-video dataset.
 
 The generator is a source-faithful port of ``generate_multiscale_video`` at
 commit ``e01c02f``: 200 x 200 pixels, 300 endpoint-inclusive snapshots over
@@ -33,7 +33,7 @@ import numpy as np
 
 from rspca.datasets import array_sha256, canonical_sha256, runtime_versions
 
-from experiments.video_figure5_paper_style import (
+from experiments.video_mode_recovery_reference import (
     DisplayFactor,
     FactorFit,
     Figure5Dataset,
@@ -572,8 +572,8 @@ def _git_text(repo_root: Path, args: Sequence[str]) -> str | None:
 
 def _provenance(repo_root: Path) -> dict[str, Any]:
     current_paths = {
-        "experiments/video_figure5_historical_github_current.py": "runner",
-        "experiments/video_figure5_paper_style.py": "shared_fit_and_gauge_helpers",
+        "experiments/video_clean_mode_recovery.py": "runner",
+        "experiments/video_mode_recovery_reference.py": "shared_fit_and_gauge_helpers",
         "src/rspca/vp.py": "current_vp_spca_solver",
         "src/rspca/datasets.py": "array_hash_and_runtime_provenance",
         "src/rspca/metrics.py": "reconstruction_metric",
@@ -726,15 +726,15 @@ def _readme(report: Mapping[str, Any]) -> str:
     vp = report["fit_metrics"]["VP-SPCA"]
     pca = report["fit_metrics"]["PCA"]
     hashes = report["historical_default_hash_contract"]
-    return f"""# Current methods on the exact historical GitHub smooth-video DGP
+    return f"""# Spatial-mode recovery and temporal dynamics
 
-This is the clean 200 x 200 x 300 mode-and-dynamics task behind the repository's
-historical GitHub pictures. It is the relevant task for the requested visual;
-it is not a corrupted-frame/robust-decomposition figure.
+This experiment evaluates spatial-mode recovery and temporal dynamics in a
+clean 200 x 200 x 300 synthetic video. It is separate from corrupted-video
+decomposition.
 
-## Open these figures
+## Figures
 
-- `{VP_FIGURE_NAME}` — current VP-SPCA in the familiar GitHub 2 x 3 layout.
+- `{VP_FIGURE_NAME}` — VP-SPCA using the source reference's 2 x 3 layout.
 - `{PCA_FIGURE_NAME}` — PCA on the identical data and display contract.
 - `{INTEGRITY_FIGURE_NAME}` — current VP-SPCA with no truth-amplitude refit.
 - `{COMBINED_FIGURE_NAME}` — compact paper-style side-by-side comparison.
@@ -764,8 +764,8 @@ protocol: L2-normalize each fitted spatial column, transfer the norm to its
 temporal column, align by Hungarian permutation/sign, and then apply a
 truth-dependent least-squares scale to a **display-only temporal plotting
 copy**. Every spatial image is independently autoscaled with `magma`. These
-choices explain why the old pictures look especially clean; they do not alter
-the native fit, reconstruction, or reported metrics.
+choices affect visualization only; they do not alter the native fit,
+reconstruction, or reported metrics.
 
 The separate integrity figure uses only an estimate-derived max-absolute
 spatial gauge with the scale transferred to time, so it preserves the

@@ -1,6 +1,6 @@
-"""Paper-scale multiscale-video reproduction with auditable outputs.
+"""Reference multiscale-video experiments with source provenance.
 
-This runner ports the useful 200 x 200 x 300 construction from the historical
+This runner ports the 200 x 200 x 300 construction from the historical
 ``spca_multiscale_video.py`` demo to the current :mod:`rspca` APIs.  It keeps
 the two experiments from Section 6.1 of Erichson et al. separate:
 
@@ -13,8 +13,8 @@ explicit, predeclared Huber threshold, and the plotted outlier layer is the
 native ``S`` returned by the solver without display thresholding.
 
 The default is intentionally the paper-scale 200 x 200 grid and 300 frames.
-Use ``--smoke`` for a cheap plumbing check; smoke output is not paper-scale
-evidence.
+Use ``--smoke`` for a small source-level check; smoke output is not
+paper-scale evidence.
 """
 
 from __future__ import annotations
@@ -839,7 +839,7 @@ def _loaded_repo_module_provenance(repo_root: Path) -> dict[str, dict[str, Any]]
         "src/rspca/randomized.py": "randomized_figure5_solver",
         "src/rspca/robust.py": "robust_figure6_solver",
         "src/rspca/vp.py": "deterministic_figure5_solver",
-        "experiments/video_spca_paper_reproduction.py": "experiment_runner",
+        "experiments/video_decomposition_reference.py": "experiment_runner",
     }
     by_path: dict[str, dict[str, Any]] = {}
     runner_path = Path(__file__).resolve()

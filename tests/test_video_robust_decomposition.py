@@ -12,11 +12,11 @@ import numpy as np
 import pytest
 from scipy import linalg
 
-from experiments.video_spca_paper_reproduction import (
+from experiments.video_decomposition_reference import (
     RobustDecompositionDataset,
     generate_figure6_dataset,
 )
-from experiments.video_spca_paper_robust_study import (
+from experiments.video_robust_decomposition import (
     CONFIRMATION_CASES_NAME,
     CONFIRMATION_FIGURE_NAME,
     CONFIRMATION_FRAMES_NAME,
@@ -551,7 +551,7 @@ def test_confirmation_exact_closure_rejects_resigned_attacks(
 
 def test_saved_robust_results_preserve_comparisons_and_failed_gate() -> None:
     root = Path(__file__).resolve().parents[1]
-    directory = root / "results/video/robust_decomposition/formal_confirm_v1"
+    directory = root / "results/video/robust_decomposition/confirmation"
     report = json.loads(
         (directory / "results.json").read_text(encoding="utf-8")
     )
