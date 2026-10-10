@@ -13,7 +13,7 @@ test-historical:
 
 # Parse CLI entry points without fitting a model or launching a benchmark.
 cli-check:
-	python experiments/spca_benchmark.py --help
-	python experiments/video_figure5_historical_github_current.py --help
-	python experiments/video_spca_paper_robust_study.py --help
-	python tools/run_genomics_selected5.py --help
+	python -m experiments.spca_benchmark --help
+	python -m experiments.video_figure5_historical_github_current --help
+	python -m experiments.video_spca_paper_robust_study --help
+	python -m tools.run_genomics_selected5 --help
