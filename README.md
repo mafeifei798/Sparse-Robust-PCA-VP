@@ -2,148 +2,72 @@
 
 University of Macau summer research | Jun-Oct 2025
 
-Implementations and evaluation materials for sparse dimensionality reduction,
-synthetic video decomposition, and genomic population stratification. The dates
-above describe the original project; subsequent implementation and validation
-work are included as well.
+Code and saved results for sparse dimensionality reduction, synthetic video
+decomposition, and genomic population stratification. The period above describes
+the original project; subsequent implementation and validation are included.
 
-## Project summary
+## Code and results
 
-- Optimized VP-SPCA for sparse dimensionality reduction using restarted FISTA,
-  backtracking, and matrix-free randomized sketches. On corrupted synthetic
-  data, accelerated VP-SPCA reduced subspace error by 30.7% versus default
-  scikit-learn PCA.
-- Recovered three interpretable spatial modes and temporal dynamics in clean
-  synthetic video. Huber-based Robust VP-SPCA separated low-rank structure from
-  sparse corruption and reduced clean reconstruction error by about 22% versus
-  PCA in the separate corrupted-video experiment.
-- Developed a randomized VP-SPCA pipeline for 1000 Genomes, retaining strong
-  population separation with 5% of 455,102 SNPs while reducing modeling workflow
-  time by 29.1% versus all-SNP PCA across 20 paired splits.
-
-## Code and results for the three contributions
-
-| Contribution | Code | Results and figures |
+| Task | Implementation | Saved results |
 | --- | --- | --- |
-| VP-SPCA optimization and synthetic recovery | [Restarted FISTA and backtracking](src/rspca/accelerated.py), [matrix-free randomized solver](src/rspca/randomized.py) | [Paired statistics](results/synthetic/default_pca_comparison/paired_replay/summary.json), [per-seed records](results/synthetic/default_pca_comparison/paired_replay/records.json) |
-| Clean-video modes and robust separation | [VP-SPCA](src/rspca/vp.py), [Huber-based robust solver](src/rspca/robust.py) | [Native three-mode figure](results/video/clean_modes/historical_github_current_v2/integrity_current_vp_spca_no_refit.png), [clean-video report](results/video/clean_modes/historical_github_current_v2/historical_github_current_report.json), [reconstruction frames](results/video/robust_decomposition/presentation_figures/reconstruction_selected_frames.png), [20-seed robust report](results/video/robust_decomposition/formal_confirm_v1/confirmation_report.json) |
-| Own-VP SNP selection and population stratification | [SNP selection and independent refit](experiments/genomics_randomized_vp_selected5.py) | [20-split statistics](results/genomics/selected_snps/paired_20seeds/summary.json), [PC1-PC2](results/genomics/selected_snps/paired_20seeds/seed_2025/pc12.png), [PC3-PC4](results/genomics/selected_snps/paired_20seeds/seed_2025/pc34.png) |
+| Sparse dimensionality reduction | [accelerated VP-SPCA](src/rspca/accelerated.py), [randomized solver](src/rspca/randomized.py) | [summary](results/synthetic/default_pca_comparison/paired_replay/summary.json), [per-seed records](results/synthetic/default_pca_comparison/paired_replay/records.json) |
+| Clean-video mode recovery | [VP-SPCA](src/rspca/vp.py) | [results](results/video/clean_modes/historical_github_current_v2/results.json), [three-mode figure](results/video/clean_modes/historical_github_current_v2/integrity_current_vp_spca_no_refit.png) |
+| Robust video decomposition | [Huber-based solver](src/rspca/robust.py) | [20-seed results](results/video/robust_decomposition/formal_confirm_v1/results.json), [figures and CSV measurements](results/video/robust_decomposition/presentation_figures) |
+| Genomic population stratification | [VP-loading SNP selection and refit](experiments/genomics_randomized_vp_selected5.py) | [20-split summary](results/genomics/selected_snps/paired_20seeds/summary.json), [PC plots](results/genomics/selected_snps/paired_20seeds/seed_2025) |
+| Cleaned-encoder comparison, including negative findings | [experiment](experiments/video_cleaned_encoder_v2.py) | [paired results](results/video/cleaned_encoder/formal_fresh_v1/results.json) |
 
-Headline percentages are rounded summaries. The linked reports retain the
-underlying measurements, and the evaluation scope is summarized below.
-Detailed execution records remain in the original research archive. Personal
-application documents and unrelated research projects are not included.
+## Measurement scope
 
-## Install and run
+- Synthetic recovery: accelerated VP-SPCA reduces subspace error by 30.7%
+  against default dense scikit-learn PCA across 12 paired seeds. This is not
+  a sparsity-matched comparison or an isolated effect of random sketches.
+- Clean-video recovery and corrupted-video reconstruction are separate tasks.
+  The clean fit recovers three native modes without truth-dependent amplitude
+  refitting, but reaches its 500-iteration limit without strict convergence.
+- In the 20-seed corrupted-video comparison, mean clean relative reconstruction
+  error is 0.4332993 for PCA and 0.3373443 for robust VP-SPCA, a 22.1452%
+  reduction. Nominal-budget outlier F1 is lower than PCA's.
+- The reference genomic configuration, RVP-select5-c0.001, selects 22,755 of
+  455,102 SNPs. Balanced accuracy is 97.475% versus 98.175% for all-SNP PCA;
+  AMR recall is 88.5% versus 92.0%. All predeclared penalty summaries remain.
+- The 29.1% genomic speedup is the median within-split workflow-time reduction
+  over 20 paired splits. Timing includes preprocessing, selection, panel
+  materialization, independent refitting, projection, and readouts; downloads,
+  upstream QC/LD processing, rendering, and independent audits are excluded.
+  A fixed 50-step VP budget does not establish strict full-data stationarity.
+- Genomic splits reuse one 1,000-person cohort; they do not establish external
+  population generalization. These are task-specific results, not universal
+  superiority or claims of a new variable-projection PCA algorithm.
 
-Python 3.11 or newer is required.
+## Install and source-only checks
+
+Python 3.11 or newer:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
 python -m pip install -e '.[experiments,dev]'
 make test-nonfed-unit
-make smoke-nonfed
 ```
 
-The source-only tests and smoke commands do not require the original
-1000 Genomes cohort. The smoke input is generated by
-`tools/generate_genomics_smoke_data.py` and must not be interpreted
-as the reported population-stratification experiment.
-
-For the maintained notebooks and optional PyTorch backend:
-
-```bash
-python -m pip install -e '.[experiments,torch,notebooks,dev]'
-python tools/execute_nonfed_notebooks.py
-```
-
-### Minimal example
-
-Rows are samples and columns are features. Center features before fitting.
+Rows are samples and columns are centered features:
 
 ```python
-import numpy as np
 from rspca import fit_accelerated_vp_spca
 
-rng = np.random.default_rng(42)
-X = rng.normal(size=(120, 40))
-X -= X.mean(axis=0, keepdims=True)
 result = fit_accelerated_vp_spca(X, n_components=3, alpha=0.1)
 X_hat = X @ result.B @ result.A.T
-print(result.status, result.n_iter)
 ```
 
-## Published evidence and archive scope
+This is a curated code-and-results snapshot, not a full replication archive.
+Downloaded cohorts, participant-level predictions, checkpoints, and standalone
+audit/packaging documents are not bundled. Historical rendering and
+archive-dependent validation tools require the separately retained original
+research archive. Source-only checks do not reproduce the saved benchmarks.
+The three video result JSON files retain their original contents; only their
+publication filenames have been standardized to results.json.
 
-This is a curated source-and-summary release, not a full raw-data archive.
-[publication_scope.json](publication_scope.json) records the publication boundary.
+## Reference and license
 
-- Synthetic recovery: paired summaries and per-seed synthetic records.
-- Clean video: the native-fit report and the no-refit three-mode figure.
-- Robust video: the sealed confirmation report and selected reconstruction
-  figures, with paired confirmation cases retained.
-- Genomics: all predeclared penalty summaries across 20 paired splits, the
-  comparison definitions below, and figures for the first
-  registered split.
-  The selected panel is discovered from VP's own loadings and independently
-  refit by VP, rather than screened by PCA.
-- Closed negative results remain supplementary and are not substituted for
-  the three headline experiments.
+N. B. Erichson et al.,
+[Sparse Principal Component Analysis via Variable Projection](https://arxiv.org/abs/1804.00341).
 
-Public result folders use descriptive names without execution dates.
-Included numeric reports, paired records, and scientific figures retain their
-original bytes. Calendar-dated notes, execution logs, and protocols containing
-local archive paths are kept locally rather than published.
-Downloaded genotypes, participant-level arrays and predictions, checkpoints,
-and personal application documents are not included.
-
-The broad `make test-nonfed` target includes archive-dependent tests
-and requires those separately retained research fixtures. The GitHub workflow
-uses `make test-nonfed-unit` and synthetic smoke inputs instead.
-
-## Evaluation scope
-
-- Synthetic recovery uses 12 paired seeds. The 30.7% subspace-error reduction
-  is the accelerated VP-SPCA comparison against default dense scikit-learn
-  PCA, not a sparsity-matched baseline or an isolated effect of random sketches.
-- Clean-video mode recovery and corrupted-video reconstruction are separate
-  experiments. The native clean fit recovers three modes without a
-  truth-dependent amplitude refit, but exhausts 500 iterations without strict
-  convergence. In the 20-seed corrupted-video comparison, mean clean relative
-  reconstruction error is 0.4332993 for PCA and 0.3373443 for the fixed robust
-  method: a 22.1452% reduction, reported above as about 22%. Its nominal-budget
-  outlier F1 is lower than PCA's.
-- Genomics uses the reference `RVP-select5-c0.001` configuration and all 20
-  paired splits, with the other predeclared penalties retained in the summary.
-  VP's own loadings select 22,755 of 455,102 SNPs for an independent VP refit.
-  The 29.1% runtime reduction is the median within-split reduction in modeling
-  workflow time from the prepared genotype matrix. It includes preprocessing,
-  selection, materialization, refitting, projection, and readouts; it excludes
-  downloads, upstream QC/LD processing, rendering, and independent audits.
-  The fixed 50-step VP budget does not establish strict full-data stationarity.
-
-## Interpretation
-
-The headline results describe specific paired evaluations, not universal
-superiority. Clean-video mode recovery and corrupted-video reconstruction are
-separate tasks. The selected-5% genomics pipeline approaches all-SNP PCA
-stratification quality but is not lossless: balanced accuracy is 97.475%
-versus 98.175%, with AMR recall 88.5% versus 92.0%. The splits reuse the same
-1,000-person cohort and do not establish external-population generalization.
-Fixed-budget nonconvergence and the negative cleaned-encoder results remain
-visible in the original reports.
-
-Published algorithm families are credited to their source papers. This
-repository contributes implementations, optimization engineering, controlled
-comparisons, and analysis of successes and limitations; it does not claim
-to have invented variable-projection SPCA.
-
-## References and license
-
-- N. B. Erichson et al.,
-  [Sparse Principal Component Analysis via Variable Projection](https://arxiv.org/abs/1804.00341).
-
-Released under the [MIT License](LICENSE).
-Citation metadata is available in [CITATION.cff](CITATION.cff).
+[MIT License](LICENSE). [Citation metadata](CITATION.cff).
