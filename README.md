@@ -2,9 +2,10 @@
 
 University of Macau summer research | Jun-Oct 2025
 
-Code and reproducible evidence for the sparse and robust PCA project described
-in the research CV. The project summary follows the CV's title, research period,
-and three contributions.
+Implementations and evaluation materials for sparse dimensionality reduction,
+synthetic video decomposition, and genomic population stratification. The dates
+above describe the original project; subsequent implementation and validation
+work are included as well.
 
 ## Project summary
 
@@ -26,15 +27,12 @@ and three contributions.
 | --- | --- | --- |
 | VP-SPCA optimization and synthetic recovery | [Restarted FISTA and backtracking](src/rspca/accelerated.py), [matrix-free randomized solver](src/rspca/randomized.py) | [Paired statistics](results/synthetic/default_pca_comparison/paired_replay/summary.json), [per-seed records](results/synthetic/default_pca_comparison/paired_replay/records.json) |
 | Clean-video modes and robust separation | [VP-SPCA](src/rspca/vp.py), [Huber-based robust solver](src/rspca/robust.py) | [Native three-mode figure](results/video/clean_modes/historical_github_current_v2/integrity_current_vp_spca_no_refit.png), [clean-video report](results/video/clean_modes/historical_github_current_v2/historical_github_current_report.json), [reconstruction frames](results/video/robust_decomposition/presentation_figures/reconstruction_selected_frames.png), [20-seed robust report](results/video/robust_decomposition/formal_confirm_v1/confirmation_report.json) |
-| Own-VP SNP selection and population stratification | [SNP selection and independent refit](experiments/genomics_randomized_vp_selected5.py) | [20-split statistics](results/genomics/selected_snps/paired_20seeds/summary.json), [PC1-PC2](results/genomics/selected_snps/paired_20seeds/seed_2025/pc12.png), [PC3-PC4](results/genomics/selected_snps/paired_20seeds/seed_2025/pc34.png), [metrics and limitations](resume_claims.json) |
+| Own-VP SNP selection and population stratification | [SNP selection and independent refit](experiments/genomics_randomized_vp_selected5.py) | [20-split statistics](results/genomics/selected_snps/paired_20seeds/summary.json), [PC1-PC2](results/genomics/selected_snps/paired_20seeds/seed_2025/pc12.png), [PC3-PC4](results/genomics/selected_snps/paired_20seeds/seed_2025/pc34.png) |
 
-Exact calculations, experiment scopes, source hashes, and limitations are
-indexed in [resume_claims.json](resume_claims.json). Public headline percentages
-are rounded summaries; the original reports retain the underlying measurements.
-The project period above describes the CV research experience. Detailed
-execution records remain in the local research archive. The CV PDF and personal contact
-details are not included in the publication subset. FedRPCA, DML, and protein
-post-training are separate CV projects, not additional claims of this SPCA summary.
+Headline percentages are rounded summaries. The linked reports retain the
+underlying measurements, and the evaluation scope is summarized below.
+Detailed execution records remain in the original research archive. Personal
+application documents and unrelated research projects are not included.
 
 ## Install and run
 
@@ -87,7 +85,7 @@ This is a curated source-and-summary release, not a full raw-data archive.
 - Robust video: the sealed confirmation report and selected reconstruction
   figures, with paired confirmation cases retained.
 - Genomics: all predeclared penalty summaries across 20 paired splits, the
-  comparison definitions in the evidence index, and figures for the first
+  comparison definitions below, and figures for the first
   registered split.
   The selected panel is discovered from VP's own loadings and independently
   refit by VP, rather than screened by PCA.
@@ -99,11 +97,32 @@ Included numeric reports, paired records, and scientific figures retain their
 original bytes. Calendar-dated notes, execution logs, and protocols containing
 local archive paths are kept locally rather than published.
 Downloaded genotypes, participant-level arrays and predictions, checkpoints,
-and the CV PDF are not included.
+and personal application documents are not included.
 
 The broad `make test-nonfed` target includes archive-dependent tests
 and requires those separately retained research fixtures. The GitHub workflow
 uses `make test-nonfed-unit` and synthetic smoke inputs instead.
+
+## Evaluation scope
+
+- Synthetic recovery uses 12 paired seeds. The 30.7% subspace-error reduction
+  is the accelerated VP-SPCA comparison against default dense scikit-learn
+  PCA, not a sparsity-matched baseline or an isolated effect of random sketches.
+- Clean-video mode recovery and corrupted-video reconstruction are separate
+  experiments. The native clean fit recovers three modes without a
+  truth-dependent amplitude refit, but exhausts 500 iterations without strict
+  convergence. In the 20-seed corrupted-video comparison, mean clean relative
+  reconstruction error is 0.4332993 for PCA and 0.3373443 for the fixed robust
+  method: a 22.1452% reduction, reported above as about 22%. Its nominal-budget
+  outlier F1 is lower than PCA's.
+- Genomics uses the reference `RVP-select5-c0.001` configuration and all 20
+  paired splits, with the other predeclared penalties retained in the summary.
+  VP's own loadings select 22,755 of 455,102 SNPs for an independent VP refit.
+  The 29.1% runtime reduction is the median within-split reduction in modeling
+  workflow time from the prepared genotype matrix. It includes preprocessing,
+  selection, materialization, refitting, projection, and readouts; it excludes
+  downloads, upstream QC/LD processing, rendering, and independent audits.
+  The fixed 50-step VP budget does not establish strict full-data stationarity.
 
 ## Interpretation
 
@@ -111,8 +130,10 @@ The headline results describe specific paired evaluations, not universal
 superiority. Clean-video mode recovery and corrupted-video reconstruction are
 separate tasks. The selected-5% genomics pipeline approaches all-SNP PCA
 stratification quality but is not lossless: balanced accuracy is 97.475%
-versus 98.175%, and AMR recall is lower. Fixed-budget nonconvergence and the
-negative cleaned-encoder results remain visible in the original reports.
+versus 98.175%, with AMR recall 88.5% versus 92.0%. The splits reuse the same
+1,000-person cohort and do not establish external-population generalization.
+Fixed-budget nonconvergence and the negative cleaned-encoder results remain
+visible in the original reports.
 
 Published algorithm families are credited to their source papers. This
 repository contributes implementations, optimization engineering, controlled
