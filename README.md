@@ -12,8 +12,34 @@ the original project; subsequent implementation and validation are included.
 | --- | --- | --- |
 | Sparse dimensionality reduction | [accelerated VP-SPCA](src/rspca/accelerated.py), [randomized solver](src/rspca/randomized.py) | [summary](results/synthetic/default_pca_comparison/paired_replay/summary.json), [per-seed records](results/synthetic/default_pca_comparison/paired_replay/records.json) |
 | Clean-video mode recovery | [VP-SPCA](src/rspca/vp.py) | [results](results/video/clean_modes/historical_github_current_v2/results.json), [three-mode figure](results/video/clean_modes/historical_github_current_v2/integrity_current_vp_spca_no_refit.png) |
-| Robust video decomposition | [Huber-based solver](src/rspca/robust.py) | [20-seed results](results/video/robust_decomposition/formal_confirm_v1/results.json), [figures and CSV measurements](results/video/robust_decomposition/presentation_figures) |
+| Robust video decomposition | [Huber-based solver](src/rspca/robust.py) | [Figure-6-style decomposition](results/video/robust_decomposition/figure6_style/robust_vp_spca_fig6.png), [20-seed results](results/video/robust_decomposition/formal_confirm_v1/results.json), [audit figures](results/video/robust_decomposition/presentation_figures) |
 | Genomic population stratification | [VP-loading SNP selection and refit](experiments/genomics_randomized_vp_selected5.py) | [20-split summary](results/genomics/selected_snps/paired_20seeds/summary.json), [PC plots](results/genomics/selected_snps/paired_20seeds/seed_2025) |
+
+## Robust video: Figure-6-style decomposition
+
+![Clean truth, corrupted input, native robust reconstruction, and native outliers](results/video/robust_decomposition/figure6_style/robust_vp_spca_fig6.png)
+
+The four panels show **truth -> corrupted input -> reconstruction -> outliers**.
+This is a saved native output from the continuation/multistart variant of our
+robust VP-SPCA implementation: confirmation seed 51001, predeclared frame 100.
+It is not the old repository's image and was not rerun or denoised for this update.
+[Figure provenance and display limits](results/video/robust_decomposition/figure6_style/provenance.json)
+record the existing fit and image hashes.
+
+Truth, input and reconstruction share one signal-range color scale; the sparse
+outlier layer uses a separate signed scale. The audit overview used a shared
+range of +/-12.62 set by gross corruption, which made a roughly 0.26 signal
+nearly invisible. The saved four-panel view uses the clean frame's 1st/99th
+percentiles for its common signal color limits. Values outside the limits
+saturate in the colormap; numerical arrays are unchanged.
+
+This illustrative frame is not the single-start method underlying the 22.1452%
+aggregate reduction quoted below, nor proof of whole-sequence recovery or
+superiority to the original legacy example. The existing
+[20-seed results](results/video/robust_decomposition/formal_confirm_v1/results.json),
+[full-frame CSV](results/video/robust_decomposition/formal_confirm_v1/confirmation_full_frame_errors.csv)
+and [worst-frame audit views](results/video/robust_decomposition/presentation_figures)
+remain available.
 
 ## Measurement scope
 
