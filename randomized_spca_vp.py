@@ -20,7 +20,7 @@ from rspca.randomized import (
 
 
 def demo_multiscale_video(seed: int = 42) -> RandomizedVPSPCAResult:
-    """Run a noisy sparse-loading benchmark under the historical demo name."""
+    """Run a centered-Gaussian smoke example under the legacy demo name."""
 
     rng = np.random.default_rng(seed)
     X = rng.normal(size=(120, 80))

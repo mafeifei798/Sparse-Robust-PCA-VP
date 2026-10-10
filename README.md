@@ -70,6 +70,10 @@ The strict array-hash replay is retained separately as `make test-historical`;
 it requires the original numerical environment and is excluded from portable
 source-only CI. Source-only checks do not reproduce the saved benchmarks.
 
+Historical source hashes remain unchanged. Documentation-only revisions in two
+solver files are checked against authenticated blobs from the pinned commit;
+executable changes are rejected. This check requires a full Git clone.
+
 ## Reference and license
 
 N. B. Erichson et al.,

@@ -1076,7 +1076,7 @@ def run_aim_protocol(
     data: MultiAutosomeGenotypeData,
     config: AIMProtocolConfig,
 ) -> AIMProtocolResult:
-    """Run paired equal-budget AIM evaluation over deterministic outer splits."""
+    """Run paired AIM evaluation with a common SNP-panel budget."""
 
     validate_multiautosome_input(data)
     _validate_config(config, data)

@@ -1,4 +1,4 @@
-"""Launch the immutable own-VP/PCA script without its bare-import -m trap.
+"""Launch the source-locked SNP-selection experiment with its import path configured.
 
 Use ``python -m tools.run_genomics_selected5 --help`` from the checkout or
 invoke this file by absolute path from another directory. Arguments and the

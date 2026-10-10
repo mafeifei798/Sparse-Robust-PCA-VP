@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import gc
+from hashlib import sha256
 import importlib.machinery
 import json
 import os
 from pathlib import Path
 import platform
+import subprocess
 import sys
 from time import perf_counter, process_time
 import traceback
@@ -57,12 +60,63 @@ SOURCE_LOCKS = {
     "experiments/genomics_randomized_vp_matched.py": "62bb043a4cf97ab471a6e3669b851a6801dbbadfc3b7f912660c8903701811fa",
     "experiments/genomics_pca_loading_all_autosomes.py": "97087a965c7e4137698fadfd6910171606c55b8448a8e6550a91c6363769885d",
 }
+FROZEN_SOURCE_COMMIT = "d126a880e8c3c7f346e851ec6336ed61c6eb161c"
+DOCUMENTATION_REVISION_PATHS = frozenset({
+    "src/rspca/randomized.py", "src/rspca/genomics_aim.py",
+})
+
+
+def _algorithm_ast(source):
+    """Normalize source for comparison, excluding comments and docstrings."""
+    class WithoutDocstrings(ast.NodeTransformer):
+        def visit(self, node):
+            node = super().visit(node)
+            if isinstance(node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                if (node.body and isinstance(node.body[0], ast.Expr)
+                        and isinstance(node.body[0].value, ast.Constant)
+                        and isinstance(node.body[0].value.value, str)):
+                    node.body = node.body[1:]
+            return node
+
+    return ast.dump(WithoutDocstrings().visit(ast.parse(source)), include_attributes=False)
+
+
+def _frozen_source(name):
+    """Read the pinned historical blob; missing Git history is an error."""
+    try:
+        result = subprocess.run(
+            ["git", "show", f"{FROZEN_SOURCE_COMMIT}:{name}"], cwd=ROOT,
+            check=True, capture_output=True, timeout=30,
+        )
+    except (OSError, subprocess.SubprocessError) as error:
+        raise ValueError(
+            f"historical source unavailable: {name}; use a full Git clone"
+        ) from error
+    return result.stdout
 
 
 def verify_sources():
+    """Check frozen byte hashes or authenticated documentation-only revisions.
+
+    Only the two declared paths permit docstring/comment changes. Their
+    executable AST must match the pinned blob, whose original hash is checked.
+    This preserves numerical code, not docstring metadata or source line numbers.
+    """
+    status = {}
     for name, expected in SOURCE_LOCKS.items():
-        if digest(ROOT / name) != expected:
-            raise ValueError(f"previous solver/source identity changed: {name}")
+        current = (ROOT / name).read_bytes()
+        if sha256(current).hexdigest() == expected:
+            status[name] = "byte_identical"
+            continue
+        if name not in DOCUMENTATION_REVISION_PATHS:
+            raise ValueError(f"frozen source changed: {name}")
+        original = _frozen_source(name)
+        if sha256(original).hexdigest() != expected:
+            raise ValueError(f"historical source anchor mismatch: {name}")
+        if _algorithm_ast(current) != _algorithm_ast(original):
+            raise ValueError(f"executable source changed: {name}")
+        status[name] = "documentation_only"
+    return status
 
 
 def load_reference():

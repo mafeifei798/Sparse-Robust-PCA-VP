@@ -315,7 +315,8 @@ def _sketch_residual_safe_step(
 
     With ``X = Q(Q.T X) + (I-QQ.T)X``, the spectral norm is at most the
     sketch spectral norm plus the residual Frobenius norm.  Squaring that bound
-    gives a conservative Lipschitz constant for the full VP gradient.
+    gives a conservative curvature bound for the fixed-A quadratic majorizer
+    used by the full-data step.
     """
 
     # ``sketch_step_size`` and the PCA initialization came from the same thin
@@ -631,7 +632,7 @@ def _certified_randomized_vp_spca_from_workspace(
 ) -> RandomizedVPSPCAResult:
     """Residual-certified sketch solve with adaptive-restart full refinement.
 
-    This 2025-style hybrid first solves the compressed problem.  It accepts
+    This hybrid first solves the compressed problem.  It accepts
     that result only when both the range residual and a matrix-free full-data
     proximal-gradient mapping pass their thresholds.  Otherwise it switches
     to true value-function FISTA on the full matrix with monotone and gradient

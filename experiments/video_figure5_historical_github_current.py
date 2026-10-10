@@ -1,7 +1,6 @@
 """Run current VP-SPCA on the exact historical GitHub smooth-video DGP.
 
-This runner directly answers the historical-image request.  Its generator is a
-source-faithful port of the default ``generate_multiscale_video`` function at
+The generator is a source-faithful port of ``generate_multiscale_video`` at
 commit ``e01c02f``: 200 x 200 pixels, 300 endpoint-inclusive snapshots over
 150 seconds, the three smooth temporal programs, frame-by-frame assembly, and
 per-pixel temporal centering.  The default X/Phi/a/t hashes are locked below.
