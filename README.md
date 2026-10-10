@@ -14,7 +14,6 @@ the original project; subsequent implementation and validation are included.
 | Clean-video mode recovery | [VP-SPCA](src/rspca/vp.py) | [results](results/video/clean_modes/historical_github_current_v2/results.json), [three-mode figure](results/video/clean_modes/historical_github_current_v2/integrity_current_vp_spca_no_refit.png) |
 | Robust video decomposition | [Huber-based solver](src/rspca/robust.py) | [20-seed results](results/video/robust_decomposition/formal_confirm_v1/results.json), [figures and CSV measurements](results/video/robust_decomposition/presentation_figures) |
 | Genomic population stratification | [VP-loading SNP selection and refit](experiments/genomics_randomized_vp_selected5.py) | [20-split summary](results/genomics/selected_snps/paired_20seeds/summary.json), [PC plots](results/genomics/selected_snps/paired_20seeds/seed_2025) |
-| Cleaned-encoder comparison, including negative findings | [experiment](experiments/video_cleaned_encoder_v2.py) | [paired results](results/video/cleaned_encoder/formal_fresh_v1/results.json) |
 
 ## Measurement scope
 
@@ -26,7 +25,9 @@ the original project; subsequent implementation and validation are included.
   refitting, but reaches its 500-iteration limit without strict convergence.
 - In the 20-seed corrupted-video comparison, mean clean relative reconstruction
   error is 0.4332993 for PCA and 0.3373443 for robust VP-SPCA, a 22.1452%
-  reduction. Nominal-budget outlier F1 is lower than PCA's.
+  reduction. Nominal-budget outlier F1 is lower than PCA's. The confirmatory
+  effect gate failed, and continuation adds no meaningful mean reconstruction
+  benefit over direct multistart. These limits remain in the saved results.
 - The reference genomic configuration, RVP-select5-c0.001, selects 22,755 of
   455,102 SNPs. Balanced accuracy is 97.475% versus 98.175% for all-SNP PCA;
   AMR recall is 88.5% versus 92.0%. All predeclared penalty summaries remain.
@@ -45,7 +46,8 @@ Python 3.11 or newer:
 
 ```bash
 python -m pip install -e '.[experiments,dev]'
-make test-nonfed-unit
+make test
+make cli-check
 ```
 
 Rows are samples and columns are centered features:
@@ -60,8 +62,11 @@ X_hat = X @ result.B @ result.A.T
 This repository includes selected code and saved results, not the full
 replication archive. Downloaded cohorts, participant-level predictions, and
 checkpoints are not included. Historical rendering and archive-dependent
-validation require the original research archive. Source-only checks do not
-reproduce the saved benchmarks.
+validation require the original research archive. In particular, the exact
+synthetic replay requires frozen source snapshots not included here. Tests
+check provenance hashes when historical Git objects are available and otherwise
+require an explicit unverified status; they do not certify unavailable history.
+Source-only checks do not reproduce the saved benchmarks.
 
 ## Reference and license
 

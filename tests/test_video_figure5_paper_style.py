@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+from hashlib import sha256
 import json
+from pathlib import Path
 import shutil
+import subprocess
 
 import numpy as np
 import pytest
@@ -117,7 +120,24 @@ def test_smoke_writer_has_exact_closure_raw_replay_and_truthful_boundary(tmp_pat
     assert report["protocol"]["methods"] == ["VP-SPCA", "PCA"]
     assert report["protocol"]["result_driven_tuning"] is False
     assert report["protocol"]["truth_dependent_amplitude_refit"] is False
-    assert report["provenance"]["historical_classic_generator"]["verified"] is True
+    record = report["provenance"]["historical_classic_generator"]
+    root = Path(__file__).resolve().parents[1]
+    historical = subprocess.run(
+        ["git", "show", f"{record['commit']}:{record['path']}"],
+        cwd=root,
+        capture_output=True,
+        timeout=10,
+        check=False,
+    )
+    actual_hash = (
+        sha256(historical.stdout).hexdigest()
+        if historical.returncode == 0
+        else None
+    )
+    if actual_hash is not None:
+        assert actual_hash == record["expected_source_sha256"]
+    assert record["local_git_object_sha256"] == actual_hash
+    assert record["verified"] is (actual_hash == record["expected_source_sha256"])
     contrast = report["paper_qualitative_contrast_audit"]
     assert contrast["pca_matches_aligned_truth_to_numerical_precision"] is True
     assert contrast["paper_pca_mixing_reproduced_by_this_inferred_protocol"] is False

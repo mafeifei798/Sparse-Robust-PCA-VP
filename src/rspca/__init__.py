@@ -1,8 +1,4 @@
-"""Tested research implementations of sparse and robust PCA algorithms.
-
-The public API is deliberately small.  Legacy top-level scripts import from
-this package so notebooks and experiments exercise the same implementation.
-"""
+"""Sparse and robust PCA algorithms with variable projection."""
 
 from .accelerated import (
     AcceleratedVPSPCAResult,
@@ -18,48 +14,6 @@ from .datasets import (
     runtime_versions,
     verify_seed_manifest,
 )
-from .cross_modal_gates import (
-    evaluate_cross_modal_semantic_gate,
-    evaluate_semantic_dataset_evidence,
-)
-from .federated import (
-    AggregationResult,
-    PairedRunPlan,
-    RobustAggregationResult,
-    coordinate_median_aggregate,
-    coordinate_trimmed_mean_aggregate,
-    fedavg_aggregate,
-    fedrpca_aggregate,
-    fedrpca_aggregate_blocks,
-    make_paired_run_plan,
-    median_norm_clipped_fedavg_aggregate,
-    principal_component_pursuit_admm,
-    reliability_gated_fedrpca,
-    sample_weighted_fedavg_aggregate,
-    task_arithmetic_aggregate,
-    ties_aggregate,
-)
-from .fedrpca_audit import (
-    BASE_COMPONENT_INTERVENTIONS,
-    FedRPCAAuditDecomposition,
-    SPARSE_OVERRIDE_INTERVENTIONS,
-    compose_component_intervention_updates,
-    compose_same_parent_state,
-    decompose_fedrpca_snapshot,
-)
-from .gauge import (
-    GaugeAlignedStatesResult,
-    GaugeCanonicalizationResult,
-    GaugePairAlignmentResult,
-    align_lora_states,
-    canonicalize_lora_pair,
-)
-from .gauge_stress import (
-    GAUGE_STRESS_CONDITION_NUMBERS,
-    GAUGE_STRESS_DRAWS,
-    aggregate_lora_product_drift,
-    product_preserving_gauge_stress_draws,
-)
 from .metrics import (
     component_correlation,
     explained_variance_ratio,
@@ -69,13 +23,6 @@ from .metrics import (
     sparsity_ratio,
     subspace_error,
     support_precision_recall_f1,
-)
-from .product_aggregation import (
-    ProductMeanResult,
-    ProductRankDiagnostics,
-    balanced_factorization,
-    exact_product_mean,
-    factors_to_product,
 )
 from .randomized import (
     RandomizedVPSPCAResult,
@@ -95,118 +42,45 @@ from .robust import (
     robust_objective,
     robust_spca_vp,
 )
-from .trust_audit import (
-    COMPONENT_CONTROL_DRAWS,
-    REQUIRED_COMPONENT_INTERVENTIONS,
-    blockwise_shared_signed_parameter_permutation_controls,
-    bootstrap_stability_summary,
-    client_sparse_energy,
-    client_sparse_energy_fault_localization,
-    normalized_direction_alignment,
-    paired_difference_in_differences,
-    per_client_norm_support_matched_random_sparse_controls,
-    planted_support_recovery_metrics,
-    validate_component_intervention_records,
-    validate_matched_client_conditions,
-)
-from .statistical_gates import (
-    cross_modal_requirement_met,
-    exact_paired_sign_flip_pvalue,
-    holm_adjusted_pvalues,
-    paired_mean_percentile_interval,
-)
 from .vp import VPSPCAResult, fit_vp_spca, spca_vp, vp_objective
 
 __version__ = "0.2.0"
 
 __all__ = [
     "AcceleratedVPSPCAResult",
-    "AggregationResult",
-    "BASE_COMPONENT_INTERVENTIONS",
-    "COMPONENT_CONTROL_DRAWS",
-    "GaugeAlignedStatesResult",
-    "GaugeCanonicalizationResult",
-    "GaugePairAlignmentResult",
-    "GAUGE_STRESS_CONDITION_NUMBERS",
-    "GAUGE_STRESS_DRAWS",
-    "FedRPCAAuditDecomposition",
-    "PairedRunPlan",
-    "ProductMeanResult",
-    "ProductRankDiagnostics",
     "RandomizedVPSPCAResult",
     "RandomizedVPSPCAWorkspace",
-    "RobustAggregationResult",
     "RobustVPSPCAResult",
-    "REQUIRED_COMPONENT_INTERVENTIONS",
     "SketchRefinementCertificate",
-    "SPARSE_OVERRIDE_INTERVENTIONS",
     "SyntheticSparseLowRank",
     "VPSPCAResult",
     "array_sha256",
-    "align_lora_states",
-    "aggregate_lora_product_drift",
-    "balanced_factorization",
-    "blockwise_shared_signed_parameter_permutation_controls",
-    "bootstrap_stability_summary",
     "canonical_sha256",
-    "canonicalize_lora_pair",
     "certified_randomized_vp_spca",
     "certified_randomized_vp_spca_from_workspace",
     "component_correlation",
-    "compose_component_intervention_updates",
-    "compose_same_parent_state",
-    "cross_modal_requirement_met",
-    "coordinate_median_aggregate",
-    "coordinate_trimmed_mean_aggregate",
-    "client_sparse_energy",
-    "client_sparse_energy_fault_localization",
     "explained_variance_ratio",
-    "exact_product_mean",
-    "exact_paired_sign_flip_pvalue",
-    "factors_to_product",
-    "evaluate_cross_modal_semantic_gate",
-    "evaluate_semantic_dataset_evidence",
-    "fedavg_aggregate",
-    "fedrpca_aggregate",
-    "fedrpca_aggregate_blocks",
-    "decompose_fedrpca_snapshot",
     "fit_accelerated_vp_spca",
     "fit_randomized_vp_spca",
     "fit_randomized_vp_spca_from_workspace",
     "fit_robust_vp_spca",
     "fit_vp_spca",
     "generate_sparse_low_rank",
-    "make_paired_run_plan",
     "make_seed_manifest",
-    "median_norm_clipped_fedavg_aggregate",
-    "holm_adjusted_pvalues",
-    "normalized_direction_alignment",
     "outlier_detection_metrics",
-    "paired_mean_percentile_interval",
-    "principal_angles",
-    "principal_component_pursuit_admm",
-    "product_preserving_gauge_stress_draws",
-    "paired_difference_in_differences",
-    "per_client_norm_support_matched_random_sparse_controls",
-    "planted_support_recovery_metrics",
     "prepare_randomized_vp_spca_workspace",
+    "principal_angles",
     "randomized_range_finder",
     "randomized_spca_vp",
     "relative_reconstruction_error",
-    "reliability_gated_fedrpca",
     "robust_objective",
     "robust_spca_vp",
     "runtime_versions",
-    "sample_weighted_fedavg_aggregate",
+    "sparsity_ratio",
     "spca_algorithm_4_1_fista_bt",
     "spca_vp",
-    "sparsity_ratio",
     "subspace_error",
     "support_precision_recall_f1",
-    "task_arithmetic_aggregate",
-    "ties_aggregate",
-    "validate_component_intervention_records",
-    "validate_matched_client_conditions",
     "verify_seed_manifest",
     "vp_objective",
 ]

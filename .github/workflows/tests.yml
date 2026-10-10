@@ -9,6 +9,7 @@ env:
   OMP_NUM_THREADS: "1"
   MKL_NUM_THREADS: "1"
   VECLIB_MAXIMUM_THREADS: "1"
+  MPLBACKEND: Agg
 
 jobs:
   test:
@@ -18,8 +19,6 @@ jobs:
         python-version: ["3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # paper provenance verifies the original commit's blobs
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
@@ -27,28 +26,5 @@ jobs:
           cache-dependency-path: pyproject.toml
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e '.[experiments,dev]'
-      - run: python tools/check_nonfed_source_tracking.py
-      - run: make test-nonfed-unit
-      - run: make smoke-nonfed
-
-  nonfed-optional-paths:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: pyproject.toml
-      - run: python -m pip install --upgrade pip
-      - run: python -m pip install -e '.[experiments,torch,notebooks,dev]'
-      - run: make test-nonfed-unit
-      - run: python tools/rebuild_notebooks.py
-      - run: >-
-          git diff --exit-code --
-          notebooks/spca_benchmark.ipynb
-          notebooks/video_spca.ipynb
-          notebooks/genomics_1kg.ipynb
-      - run: python tools/execute_nonfed_notebooks.py
+      - run: make test
+      - run: make cli-check

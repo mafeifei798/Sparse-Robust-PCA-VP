@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from hashlib import sha256
 import json
+from pathlib import Path
+import subprocess
 
 import numpy as np
 import pytest
@@ -107,10 +110,25 @@ def test_smoke_output_is_closed_replayable_and_has_no_amplitude_refit(tmp_path) 
     assert "dashed orange curves\nare the **raw** generator truth" in readme
     assert "the **centered** generator truth" in readme
     assert report["protocol"]["not_exact_paper_data"] is True
-    assert all(
-        record["verified"]
-        for record in report["provenance"]["historical_sources"].values()
-    )
+    provenance = report["provenance"]
+    root = Path(__file__).resolve().parents[1]
+    for relative, record in provenance["historical_sources"].items():
+        historical = subprocess.run(
+            ["git", "show", f"{provenance['historical_git_commit']}:{relative}"],
+            cwd=root,
+            capture_output=True,
+            timeout=10,
+            check=False,
+        )
+        actual_hash = (
+            sha256(historical.stdout).hexdigest()
+            if historical.returncode == 0
+            else None
+        )
+        if actual_hash is not None:
+            assert actual_hash == record["expected_sha256"]
+        assert record["local_git_object_sha256"] == actual_hash
+        assert record["verified"] is (actual_hash == record["expected_sha256"])
     with np.load(paths["raw"], allow_pickle=False) as arrays:
         for prefix in ("vp", "pca"):
             np.testing.assert_allclose(

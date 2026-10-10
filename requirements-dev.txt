@@ -1,2 +1,1 @@
--e .[experiments,torch,notebooks,dev]
-
+-e .[experiments,dev]

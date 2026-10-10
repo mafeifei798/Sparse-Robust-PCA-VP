@@ -549,23 +549,62 @@ def test_confirmation_exact_closure_rejects_resigned_attacks(
         validate_confirmation_output_directory(output)
 
 
-def test_formal_result_card_preserves_failed_gate_and_claim_boundaries() -> None:
+def test_saved_robust_results_preserve_comparisons_and_failed_gate() -> None:
     root = Path(__file__).resolve().parents[1]
-    result_card = (
-        root / "results/video_paper_robust_study_20260830/README.md"
-    ).read_text(encoding="utf-8")
-    main_readme = (root / "README.md").read_text(encoding="utf-8")
-    study_doc = (root / "docs/video_paper_robust_study.md").read_text(
-        encoding="utf-8"
+    directory = root / "results/video/robust_decomposition/formal_confirm_v1"
+    report = json.loads(
+        (directory / "results.json").read_text(encoding="utf-8")
+    )
+    lock = json.loads(
+        (directory / "selection_lock.json").read_text(encoding="utf-8")
+    )
+    seeds = report["confirmation_seeds"]
+    assert len(seeds) == len(set(seeds)) == 20
+    assert [case["seed"] for case in report["case_records"]] == seeds
+    assert report["confirmation_truth_used_for_tuning"] is False
+    assert report["confirmation_parameter_overrides_allowed"] is False
+    assert report["locked_selected_parameters"] == lock["selected_parameters"]
+    assert report["selection_lock_sha256"] == lock["selection_lock_sha256"]
+
+    summaries = report["method_summaries"]
+    assert set(summaries) == {
+        "continuation_multistart", "direct_multistart", "legacy_dynamic_kappa",
+        "pca", "single_start",
+    }
+    robust_metrics = summaries["continuation_multistart"]["metrics"]
+    pca_metrics = summaries["pca"]["metrics"]
+    robust_error = robust_metrics["clean_relative_reconstruction_error"]["mean"]
+    pca_error = pca_metrics["clean_relative_reconstruction_error"]["mean"]
+    assert robust_error == pytest.approx(0.3373443365552934, abs=1e-12)
+    assert pca_error == pytest.approx(0.4332992716224669, abs=1e-12)
+    assert (pca_error - robust_error) / pca_error == pytest.approx(
+        0.22145187253113807, abs=1e-12
     )
 
-    for text in (result_card, main_readme, study_doc):
-        assert "confirmatory effect gate failed" in text
-        assert "0.337344" in text
-        assert "0.433299" in text
-        assert "0.858454" in text
-        assert "0.922884" in text
-    assert "not a new" in result_card.lower()
-    assert "no real-video" in result_card.lower()
-    assert "add no meaningful clean-reconstruction benefit" in main_readme
-    assert "original GitHub VP-SPCA figure" in result_card
+    # Version-1 artifacts use true_budget for the nominal protocol budget.
+    robust_f1 = robust_metrics[LEGACY_OUTLIER_TRUE_BUDGET_F1]["mean"]
+    pca_f1 = pca_metrics[LEGACY_OUTLIER_TRUE_BUDGET_F1]["mean"]
+    assert robust_f1 == pytest.approx(0.8584540686275662, abs=1e-12)
+    assert pca_f1 == pytest.approx(0.9228835714567744, abs=1e-12)
+    assert robust_f1 < pca_f1
+
+    qualification = report["strict_qualification"]
+    assert qualification["strict_confirmatory_effect_gate_passed"] is False
+    assert qualification["claim_status"] == "confirmatory effect gate failed"
+    gates = qualification["comparator_effect_gates"]
+    assert gates["pca"]["passed"] is False
+    assert gates["direct_multistart"]["passed"] is False
+    assert gates["single_start"]["passed"] is False
+    assert gates["legacy_dynamic_kappa"]["passed"] is True
+
+    comparison = report["paired_confirm_summaries"][
+        "continuation_minus_direct_multistart"
+    ]["clean_relative_reconstruction_error"]
+    assert comparison["mean_difference"] == pytest.approx(
+        1.3371185128563389e-08, abs=1e-14
+    )
+    interval = comparison["bootstrap_mean_difference_ci"]
+    assert interval["lower"] <= 0.0 <= interval["upper"]
+    boundary = report["scientific_boundary"].lower()
+    assert "no new pca algorithm" in boundary
+    assert "no real-video generalization claim" in boundary
