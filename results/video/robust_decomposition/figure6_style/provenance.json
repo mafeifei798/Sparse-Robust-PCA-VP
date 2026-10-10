@@ -81,7 +81,7 @@
   "scientific_scope": [
     "This is an illustrative single-frame output of the continuation/multistart variant, not the single-start aggregate used for the 22.1452 percent comparison.",
     "A readable Figure-6-style display is not evidence that the method improved, that every frame is clean, or that it outperformed the user's legacy example.",
-    "The existing all-seed statistics, full-frame errors and worst-frame audit figures are unchanged.",
+    "All-seed statistics and full-frame errors are unchanged; additional audit figures remain in the original local archive.",
     "This display-only publication does not upload the original execution protocols or local archive paths."
   ]
 }

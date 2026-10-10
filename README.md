@@ -2,71 +2,78 @@
 
 University of Macau summer research | Jun-Oct 2025
 
-Code and saved results for sparse dimensionality reduction, synthetic video
-decomposition, and genomic population stratification. The period above describes
-the original project; subsequent implementation and validation are included.
+Selected code and saved results for the three contributions described in the
+research CV. The project period refers to the original research; later
+implementation and validation are included.
 
-## Code and results
+## 1. Sparse dimensionality reduction
 
-| Task | Implementation | Saved results |
-| --- | --- | --- |
-| Sparse dimensionality reduction | [accelerated VP-SPCA](src/rspca/accelerated.py), [randomized solver](src/rspca/randomized.py) | [summary](results/synthetic/default_pca_comparison/paired_replay/summary.json), [per-seed records](results/synthetic/default_pca_comparison/paired_replay/records.json) |
-| Clean-video mode recovery | [VP-SPCA](src/rspca/vp.py) | [results](results/video/clean_modes/historical_github_current_v2/results.json), [three-mode figure](results/video/clean_modes/historical_github_current_v2/integrity_current_vp_spca_no_refit.png) |
-| Robust video decomposition | [Huber-based solver](src/rspca/robust.py) | [Figure-6-style decomposition](results/video/robust_decomposition/figure6_style/robust_vp_spca_fig6.png), [20-seed results](results/video/robust_decomposition/formal_confirm_v1/results.json), [audit figures](results/video/robust_decomposition/presentation_figures) |
-| Genomic population stratification | [VP-loading SNP selection and refit](experiments/genomics_randomized_vp_selected5.py) | [20-split summary](results/genomics/selected_snps/paired_20seeds/summary.json), [PC plots](results/genomics/selected_snps/paired_20seeds/seed_2025) |
+Restarted FISTA, backtracking, and matrix-free randomized sketches support our
+VP-SPCA implementation. Accelerated VP-SPCA reduced subspace error by **30.7%**
+versus default scikit-learn PCA on corrupted synthetic data across 12 paired seeds.
 
-## Robust video: Figure-6-style decomposition
+[Accelerated solver](src/rspca/accelerated.py) ·
+[Randomized solver](src/rspca/randomized.py) ·
+[Summary](results/synthetic/default_pca_comparison/paired_replay/summary.json) ·
+[Per-seed records](results/synthetic/default_pca_comparison/paired_replay/records.json)
 
-![Clean truth, corrupted input, native robust reconstruction, and native outliers](results/video/robust_decomposition/figure6_style/robust_vp_spca_fig6.png)
+This comparison uses default dense PCA, not a sparsity-matched baseline; it does
+not isolate the contribution of random sketches.
 
-The four panels show **truth -> corrupted input -> reconstruction -> outliers**.
-This is a saved native output from the continuation/multistart variant of our
-robust VP-SPCA implementation: confirmation seed 51001, predeclared frame 100.
-It is not the old repository's image and was not rerun or denoised for this update.
-[Figure provenance and display limits](results/video/robust_decomposition/figure6_style/provenance.json)
-record the existing fit and image hashes.
+## 2. Synthetic video decomposition
 
-Truth, input and reconstruction share one signal-range color scale; the sparse
-outlier layer uses a separate signed scale. The audit overview used a shared
-range of +/-12.62 set by gross corruption, which made a roughly 0.26 signal
-nearly invisible. The saved four-panel view uses the clean frame's 1st/99th
-percentiles for its common signal color limits. Values outside the limits
-saturate in the colormap; numerical arrays are unchanged.
+### Clean video: three spatial modes and temporal dynamics
 
-This illustrative frame is not the single-start method underlying the 22.1452%
-aggregate reduction quoted below, nor proof of whole-sequence recovery or
-superiority to the original legacy example. The existing
-[20-seed results](results/video/robust_decomposition/formal_confirm_v1/results.json),
-[full-frame CSV](results/video/robust_decomposition/formal_confirm_v1/confirmation_full_frame_errors.csv)
-and [worst-frame audit views](results/video/robust_decomposition/presentation_figures)
-remain available.
+![Three recovered spatial modes and their temporal dynamics](results/video/clean_modes/historical_github_current_v2/integrity_current_vp_spca_no_refit.png)
 
-## Measurement scope
+[VP-SPCA solver](src/rspca/vp.py) ·
+[Saved results](results/video/clean_modes/historical_github_current_v2/results.json)
 
-- Synthetic recovery: accelerated VP-SPCA reduces subspace error by 30.7%
-  against default dense scikit-learn PCA across 12 paired seeds. This is not
-  a sparsity-matched comparison or an isolated effect of random sketches.
-- Clean-video recovery and corrupted-video reconstruction are separate tasks.
-  The clean fit recovers three native modes without truth-dependent amplitude
-  refitting, but reaches its 500-iteration limit without strict convergence.
-- In the 20-seed corrupted-video comparison, mean clean relative reconstruction
-  error is 0.4332993 for PCA and 0.3373443 for robust VP-SPCA, a 22.1452%
-  reduction. Nominal-budget outlier F1 is lower than PCA's. The confirmatory
-  effect gate failed, and continuation adds no meaningful mean reconstruction
-  benefit over direct multistart. These limits remain in the saved results.
-- The reference genomic configuration, RVP-select5-c0.001, selects 22,755 of
-  455,102 SNPs. Balanced accuracy is 97.475% versus 98.175% for all-SNP PCA;
-  AMR recall is 88.5% versus 92.0%. All predeclared penalty summaries remain.
-- The 29.1% genomic speedup is the median within-split workflow-time reduction
-  over 20 paired splits. Timing includes preprocessing, selection, panel
-  materialization, independent refitting, projection, and readouts; downloads,
-  upstream QC/LD processing, rendering, and independent audits are excluded.
-  A fixed 50-step VP budget does not establish strict full-data stationarity.
-- Genomic splits reuse one 1,000-person cohort; they do not establish external
-  population generalization. These are task-specific results, not universal
-  superiority or claims of a new variable-projection PCA algorithm.
+These are native outputs without truth-dependent amplitude refitting. The clean
+fit reached its 500-iteration budget without strict convergence.
 
-## Install and source-only checks
+### Corrupted video: robust reconstruction and sparse outliers
+
+![Clean truth, corrupted input, robust reconstruction, and sparse outliers](results/video/robust_decomposition/figure6_style/robust_vp_spca_fig6.png)
+
+The four panels show truth, corrupted input, reconstruction, and outliers.
+This saved continuation/multistart output uses predeclared seed 51001 and frame
+100; it is an illustration, not the single-start fit used for the aggregate
+comparison below. Shared signal color limits and a separate signed outlier
+scale affect display only.
+
+[Huber-based solver](src/rspca/robust.py) ·
+[Figure provenance](results/video/robust_decomposition/figure6_style/provenance.json) ·
+[20-seed results](results/video/robust_decomposition/formal_confirm_v1/results.json) ·
+[Full-frame errors](results/video/robust_decomposition/formal_confirm_v1/confirmation_full_frame_errors.csv)
+
+Across 20 paired seeds, single-start robust VP-SPCA reduced mean clean relative
+reconstruction error from 0.4332993 to 0.3373443 versus PCA, **about 22%**.
+Nominal-budget outlier F1 was lower than PCA's, and the confirmatory effect gate
+failed. The full statistics and selection lock are retained.
+
+## 3. Genomic population stratification
+
+The randomized VP-SPCA SNP-selection pipeline retains **22,755 of 455,102 SNPs
+(5%)**. Across 20 paired splits, its median within-split workflow-time reduction
+versus all-SNP PCA was **29.1%**.
+
+[Pipeline](experiments/genomics_randomized_vp_selected5.py) ·
+[20-split summary](results/genomics/selected_snps/paired_20seeds/summary.json)
+
+![Population stratification on PC1 and PC2](results/genomics/selected_snps/paired_20seeds/seed_2025/pc12.png)
+
+![Population stratification on PC3 and PC4](results/genomics/selected_snps/paired_20seeds/seed_2025/pc34.png)
+
+The plots show the first registered split (seed 2025), not aggregate scores.
+Across all splits, standardized-PC balanced accuracy was 97.475% versus 98.175% for all-SNP PCA;
+AMR recall was 88.5% versus 92.0%. Timing includes preprocessing, selection,
+panel materialization, refitting, projection, and readouts, but excludes
+downloads, upstream QC/LD processing, rendering, and independent audits.
+A fixed 50-step VP budget and repeated splits of one 1,000-person cohort do not
+establish strict stationarity or external population generalization.
+
+## Install and checks
 
 Python 3.11 or newer:
 
@@ -76,29 +83,16 @@ make test
 make cli-check
 ```
 
-Rows are samples and columns are centered features:
+The repository contains the three project components, their required shared
+dependencies, tests, four main figures, and supporting numerical records.
+Additional figures and the complete research archive remain local. Saved
+reports may list original archive outputs not included in this curated release.
+Downloaded cohorts, participant-level predictions, and checkpoints are excluded.
 
-```python
-from rspca import fit_accelerated_vp_spca
-
-result = fit_accelerated_vp_spca(X, n_components=3, alpha=0.1)
-X_hat = X @ result.B @ result.A.T
-```
-
-This repository includes selected code and saved results, not the full
-replication archive. Downloaded cohorts, participant-level predictions, and
-checkpoints are not included. Historical rendering and archive-dependent
-validation require the original research archive. In particular, the exact
-synthetic replay requires frozen source snapshots not included here. Tests
-check source provenance hashes when historical Git objects are available and otherwise
-require an explicit unverified status; they do not certify unavailable history.
-The strict array-hash replay is retained separately as `make test-historical`;
-it requires the original numerical environment and is excluded from portable
-source-only CI. Source-only checks do not reproduce the saved benchmarks.
-
-Historical source hashes remain unchanged. Documentation-only revisions in two
-solver files are checked against authenticated blobs from the pinned commit;
-executable changes are rejected. This check requires a full Git clone.
+Source-only checks do not reproduce the saved benchmarks. Historical rendering
+and exact synthetic replay require the original archive and numerical
+environment; strict array-hash checks are separate in `make test-historical`.
+Source provenance checks use pinned Git objects, so use a full Git clone.
 
 ## Reference and license
 
