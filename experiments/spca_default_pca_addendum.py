@@ -386,14 +386,14 @@ def run(output, protocol):
                 render_report(output, summary, reproduction, identities)
                 failed = [r for r in reproduction if r["status"] != "passed"]
                 if failed:
-                    raise RuntimeError(f"Historical metric reproduction failed in {len(failed)} arms; no resume claim permitted")
+                    raise RuntimeError(f"Historical metric reproduction failed in {len(failed)} arms; no performance claim permitted")
             write_json(output/"completion.json", dict(status="complete_ordinary_pca_addendum_not_confirmation",
                 records=len(records), datasets=len(identities), reproduction_checks=len(reproduction),
                 historical_byte_matches=sum(i["observed_matches_historical"] for i in identities),
                 files={str(p.relative_to(output)): digest(p) for p in sorted(output.rglob("*")) if p.is_file()}))
             print(f"Complete: {output}", flush=True)
         except BaseException as error:
-            write_json(output/"FAILED.json", dict(status="failed_preserved_do_not_use_for_resume",
+            write_json(output/"FAILED.json", dict(status="failed_preserved_do_not_use_for_performance_claims",
                 error=repr(error), records_completed=len(records), reproduction_checks_completed=len(reproduction)))
             raise
 

@@ -57,13 +57,11 @@ result = fit_accelerated_vp_spca(X, n_components=3, alpha=0.1)
 X_hat = X @ result.B @ result.A.T
 ```
 
-This is a curated code-and-results snapshot, not a full replication archive.
-Downloaded cohorts, participant-level predictions, checkpoints, and standalone
-audit/packaging documents are not bundled. Historical rendering and
-archive-dependent validation tools require the separately retained original
-research archive. Source-only checks do not reproduce the saved benchmarks.
-The three video result JSON files retain their original contents; only their
-publication filenames have been standardized to results.json.
+This repository includes selected code and saved results, not the full
+replication archive. Downloaded cohorts, participant-level predictions, and
+checkpoints are not included. Historical rendering and archive-dependent
+validation require the original research archive. Source-only checks do not
+reproduce the saved benchmarks.
 
 ## Reference and license
 

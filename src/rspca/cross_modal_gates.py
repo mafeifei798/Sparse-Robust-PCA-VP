@@ -307,7 +307,7 @@ def evaluate_cross_modal_semantic_gate(
         "dataset_decisions": decisions,
         "reasons": reasons,
         "safe_amplification_stage_authorized": passed,
-        "cv_performance_claim_authorized": False,
+        "performance_claim_authorized": False,
     }
 
 

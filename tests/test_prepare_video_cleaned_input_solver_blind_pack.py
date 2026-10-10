@@ -161,7 +161,7 @@ def _write_protocol(
             "audit_kind": STATIC_AUDIT_KIND,
             "status": "passed",
             "auditor_independent": True,
-            "auditor_id": "codex-subagent:test-auditor",
+            "auditor_id": "test-auditor",
             "audit_timestamp": "2026-09-08T00:01:00+08:00",
             "protocol_body_sha256": protocol["protocol_body_sha256"],
             "source_sha256": protocol["source_sha256"],
