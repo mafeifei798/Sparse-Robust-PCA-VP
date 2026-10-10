@@ -44,3 +44,6 @@ py-modules = [
 [tool.pytest.ini_options]
 addopts = "-ra --strict-markers"
 testpaths = ["tests"]
+markers = [
+  "historical_environment: strict bitwise replay requiring the original numerical environment",
+]

@@ -64,9 +64,11 @@ replication archive. Downloaded cohorts, participant-level predictions, and
 checkpoints are not included. Historical rendering and archive-dependent
 validation require the original research archive. In particular, the exact
 synthetic replay requires frozen source snapshots not included here. Tests
-check provenance hashes when historical Git objects are available and otherwise
+check source provenance hashes when historical Git objects are available and otherwise
 require an explicit unverified status; they do not certify unavailable history.
-Source-only checks do not reproduce the saved benchmarks.
+The strict array-hash replay is retained separately as `make test-historical`;
+it requires the original numerical environment and is excluded from portable
+source-only CI. Source-only checks do not reproduce the saved benchmarks.
 
 ## Reference and license
 

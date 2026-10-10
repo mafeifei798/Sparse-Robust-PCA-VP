@@ -43,6 +43,7 @@ def test_defaults_lock_exact_historical_github_protocol() -> None:
     )
 
 
+@pytest.mark.historical_environment
 def test_default_generator_matches_commit_e01c02f_array_hashes() -> None:
     dataset, phi_true, a_true = generate_exact_historical_github_dataset()
     actual = {
