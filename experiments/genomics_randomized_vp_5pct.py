@@ -20,7 +20,7 @@ import warnings
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-# Fresh scientific execution needs the non-Fed modules, not eager package exports.
+# Load only the modules required by this experiment.
 if __name__ == "__main__" and "rspca" not in sys.modules:
     package = types.ModuleType("rspca")
     package.__path__ = [str(ROOT / "src/rspca")]
