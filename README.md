@@ -24,10 +24,14 @@ Based on Erichson et al., [Sparse Principal Component Analysis via Variable Proj
 | Corrupted synthetic video | Single-start Robust VP-SPCA reduced mean clean reconstruction error by 22.1% versus PCA across 20 paired seeds | [Results](results/video/robust_decomposition/confirmation/results.json), [per-frame errors](results/video/robust_decomposition/confirmation/confirmation_full_frame_errors.csv) |
 | 1000 Genomes | Selected 22,755 of 455,102 SNPs (5%); balanced accuracy 97.475% versus 98.175% for all-SNP PCA; median within-split modeling-runtime reduction 29.1% across 20 paired splits | [Summary](results/genomics/selected_snps/paired_splits/summary.json) |
 
-Figures: [spatial modes and dynamics](results/video/clean_modes/three_mode_recovery/spatial_modes_and_dynamics.png),
+Figures: [VP-SPCA spatial modes and dynamics](results/video/clean_modes/three_mode_recovery/spatial_modes_and_dynamics.png),
+[PCA spatial modes and dynamics](results/video/clean_modes/three_mode_recovery/pca_spatial_modes_and_dynamics.png),
 [robust decomposition](results/video/robust_decomposition/representative_frame/robust_video_decomposition.png),
 [population PC1/PC2](results/genomics/selected_snps/paired_splits/seed_2025/pc12.png),
 [population PC3/PC4](results/genomics/selected_snps/paired_splits/seed_2025/pc34.png).
+
+The clean-video figures use saved factors from the same input and rank, with
+reconstruction-preserving normalization and no truth-dependent amplitude refit.
 
 The synthetic PCA comparison is not sparsity-matched and does not isolate
 sketching effects. The clean-video fit reached 500 iterations without strict
