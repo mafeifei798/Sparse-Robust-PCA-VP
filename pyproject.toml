@@ -23,9 +23,6 @@ experiments = [
   "scikit-learn>=1.3",
 ]
 frozen-genomics = ["scikit-learn==1.7.0"]
-dev = [
-  "pytest>=8.0",
-]
 
 [project.urls]
 Repository = "https://github.com/mafeifei798/Sparse-Robust-PCA-VP"
@@ -33,16 +30,3 @@ Repository = "https://github.com/mafeifei798/Sparse-Robust-PCA-VP"
 [tool.setuptools]
 packages = ["rspca"]
 package-dir = { rspca = "src/rspca" }
-py-modules = [
-  "randomized_spca_vp",
-  "robust_spca_vp",
-  "spca_variable_projection",
-  "spca_variable_projection_fista_bt",
-]
-
-[tool.pytest.ini_options]
-addopts = "-ra --strict-markers"
-testpaths = ["tests"]
-markers = [
-  "historical_environment: strict bitwise replay requiring the original numerical environment",
-]

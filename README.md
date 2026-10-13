@@ -4,7 +4,7 @@
 
 Sparse dimensionality reduction, synthetic video decomposition, and genomic
 population stratification using variable-projection PCA methods. This repository
-contains implementations, tests, and saved numerical results. [MIT License](LICENSE).
+contains implementations and saved numerical results. [MIT License](LICENSE).
 
 ## Methods
 
@@ -63,11 +63,15 @@ stationarity or external-population generalization.
 Use Python 3.11 or newer and a full Git clone:
 
 ```bash
-python -m pip install -e '.[experiments,dev]'
-make test
-make cli-check
+python -m pip install -e '.[experiments]'
+python -m experiments.spca_benchmark --help
+python -m experiments.video_clean_mode_recovery --help
+python -m experiments.video_robust_decomposition --help
+PYTHONPATH=src python experiments/genomics_randomized_vp_selected5.py --help
 ```
 
-These checks validate source behavior, not saved benchmark reproduction. Exact
-replay requires the original inputs and numerical environment. Downloaded
-genotypes, participant-level predictions, and checkpoints are not distributed.
+`pyproject.toml` records package dependencies; saved experiment parameters are
+retained with the numerical results. The commands above show the experiment
+interfaces without running a benchmark. Exact replay requires the original inputs
+and numerical environment. Downloaded genotypes, participant-level predictions,
+and checkpoints are not distributed.
