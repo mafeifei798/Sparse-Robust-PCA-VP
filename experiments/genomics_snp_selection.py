@@ -29,14 +29,14 @@ from scipy import linalg
 import sklearn
 from threadpoolctl import threadpool_info, threadpool_limits
 
-import genomics_randomized_vp_5pct as shared
+import genomics_fixed_panel as shared
 from genomics_randomized_vp_matched import COLORS, POPULATIONS, digest, write_json
 from rspca.datasets import array_sha256
 from rspca.genomics_aim import select_loading_panel
 from rspca.genomics_cached import standardized_genotype_cache
 from rspca.randomized import _full_diagnostics
 
-BASE = ROOT / "results/genomics/selected5_replay"
+BASE = ROOT / "results/genomics/snp_selection_replay"
 SEEDS = tuple(range(2025, 2045))
 RANK, PANEL_SIZE, REPEATS, BOOTSTRAP_SEED = 8, 22755, 3, 9082026
 PENALTIES = (.0002, .001, .005)

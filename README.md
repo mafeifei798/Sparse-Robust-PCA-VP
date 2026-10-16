@@ -11,7 +11,7 @@ synthetic video decomposition, and genomic population stratification.
 - [Accelerated VP-SPCA](src/rspca/accelerated.py): restarted FISTA and backtracking.
 - [Randomized VP-SPCA](src/rspca/randomized.py): matrix-free randomized sketches.
 - [Robust VP-SPCA](src/rspca/robust.py): Huber loss and sparse outlier separation.
-- [Genomics pipeline](experiments/genomics_randomized_vp_selected5.py): SNP selection and independent refitting.
+- [Genomics pipeline](experiments/genomics_snp_selection.py): SNP selection and independent refitting.
 
 Based on Erichson et al., [Sparse Principal Component Analysis via Variable Projection](https://arxiv.org/abs/1804.00341).
 
@@ -54,7 +54,7 @@ python -m pip install -e '.[experiments]'
 python -m experiments.spca_pca_comparison --help
 python -m experiments.video_clean_mode_recovery --help
 python -m experiments.video_robust_decomposition --help
-PYTHONPATH=src python experiments/genomics_randomized_vp_selected5.py --help
+PYTHONPATH=src python experiments/genomics_snp_selection.py --help
 ```
 
 These commands show interfaces without running experiments. Full historical
