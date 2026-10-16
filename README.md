@@ -59,6 +59,9 @@ PYTHONPATH=src python experiments/genomics_randomized_vp_selected5.py --help
 
 These commands show interfaces without running experiments. Full historical
 replay requires the original source/input archives and numerical environment.
+Supply their locations explicitly with the input, reference, protocol, and
+historical-source options shown by `--help`; source and data hash checks remain
+mandatory regardless of the archive's location.
 Experiment parameters remain with the results; package dependencies are in
 `pyproject.toml`. Genotypes, participant-level predictions, and checkpoints
 are not distributed. [MIT License](LICENSE).

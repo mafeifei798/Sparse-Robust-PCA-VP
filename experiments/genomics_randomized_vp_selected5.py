@@ -36,7 +36,7 @@ from rspca.genomics_aim import select_loading_panel
 from rspca.genomics_cached import standardized_genotype_cache
 from rspca.randomized import _full_diagnostics
 
-BASE = ROOT / "results/genomics_randomized_vp_selected5_2026-09-08"
+BASE = ROOT / "results/genomics/selected5_replay"
 SEEDS = tuple(range(2025, 2045))
 RANK, PANEL_SIZE, REPEATS, BOOTSTRAP_SEED = 8, 22755, 3, 9082026
 PENALTIES = (.0002, .001, .005)
@@ -340,7 +340,9 @@ def write_report(output, summary):
     (output / "README.md").write_text("\n".join(lines))
 
 
-def run(output, protocol):
+def run(output, protocol, *, input_path, reference, manifest=None):
+    input_path = Path(input_path)
+    manifest = input_path.with_suffix(".manifest.json") if manifest is None else Path(manifest)
     if output.exists():
         raise FileExistsError("refusing to overwrite an existing experiment")
     shared.verify_sources()
@@ -349,7 +351,7 @@ def run(output, protocol):
     environment = {key: os.environ.get(key) for key in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS")}
     if set(environment.values()) != {"1"}:
         raise RuntimeError("all four thread environment variables must equal 1")
-    reference, verified = shared.load_reference()
+    reference, verified = shared.load_reference(reference)
     output.mkdir(parents=True)
     try:
         closure = shared.source_closure()
@@ -371,7 +373,7 @@ def run(output, protocol):
             archive.write(protocol, "PROTOCOL.md")
         warnings.simplefilter("error", RuntimeWarning)
         records, preparation = [], []
-        with threadpool_limits(1), shared.formal.load_formal_input(shared.INPUT, shared.MANIFEST,
+        with threadpool_limits(1), shared.formal.load_formal_input(input_path, manifest,
                 expected_source_manifest_sha256=shared.formal.FROZEN_FORMAL_MANIFEST_SHA256,
                 scratch_root=Path("/private/tmp")) as (data, identity):
             pools = threadpool_info()
@@ -430,9 +432,17 @@ def run(output, protocol):
         raise
 
 
-if __name__ == "__main__":
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=BASE / "paired_20seeds")
-    parser.add_argument("--protocol", type=Path, default=BASE / "PROTOCOL.md")
-    args = parser.parse_args()
-    run(args.output, args.protocol)
+    parser.add_argument("--protocol", type=Path, required=True, help="Original protocol file")
+    parser.add_argument("--input", dest="input_path", type=Path, required=True, help="Authenticated genotype NPZ archive")
+    parser.add_argument("--manifest", type=Path, help="Input manifest; defaults to the NPZ path with suffix .manifest.json")
+    parser.add_argument("--reference", type=Path, required=True, help="Authenticated full-SNP reference package")
+    args = parser.parse_args(argv)
+    return run(args.output, args.protocol, input_path=args.input_path,
+               reference=args.reference, manifest=args.manifest)
+
+
+if __name__ == "__main__":
+    main()

@@ -43,10 +43,7 @@ from rspca.genomics_aim import fit_smartpca_preprocessor, transform_smartpca
 from rspca.randomized import _full_diagnostics
 from rspca.randomized_reduced_fast import fit_fast_randomized_vp_spca
 
-BASE = ROOT / "results/genomics_randomized_vp_5pct_2026-09-07"
-REFERENCE = ROOT / "results/genomics_all_autosome_stratification_2026-08-31/remote_v2_clean/registered_20seeds_merged"
-INPUT = ROOT / "results/genomics_all_autosome_preparation_2026-08-31/package/genomics_aim_all_autosomes.npz"
-MANIFEST = INPUT.with_suffix(".manifest.json")
+BASE = ROOT / "results/genomics/panel_comparison_replay"
 SEEDS = tuple(range(2025, 2045))
 RANK, PANEL_SIZE, REPEATS, BOOTSTRAP_SEED = 8, 22755, 3, 9072026
 PENALTIES = (.0002, .001, .005)
@@ -119,11 +116,12 @@ def verify_sources():
     return status
 
 
-def load_reference():
+def load_reference(reference):
+    reference = Path(reference)
     verification = formal.validate_output_package(
-        REFERENCE, expected_analysis_sha256=historical.FORMAL_ANALYSIS_SHA256,
+        reference, expected_analysis_sha256=historical.FORMAL_ANALYSIS_SHA256,
         expected_package_anchor_sha256=historical.FORMAL_PACKAGE_ANCHOR_SHA256)
-    payload = formal._strict_json_load(REFERENCE / formal.RESULT_FILENAME)
+    payload = formal._strict_json_load(reference / formal.RESULT_FILENAME)
     historical._validate_reference_payload(payload, historical.FORMAL_MODE)
     return payload, verification
 
@@ -407,7 +405,9 @@ def write_report(output, summary, preparation):
     (output / "README.md").write_text("\n".join(lines))
 
 
-def run(output, protocol):
+def run(output, protocol, *, input_path, reference, manifest=None):
+    input_path = Path(input_path)
+    manifest = input_path.with_suffix(".manifest.json") if manifest is None else Path(manifest)
     if output.exists():
         raise FileExistsError("refusing to overwrite an existing experiment")
     verify_sources()
@@ -416,7 +416,7 @@ def run(output, protocol):
     environment = {key: os.environ.get(key) for key in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS")}
     if set(environment.values()) != {"1"}:
         raise RuntimeError("all four BLAS thread environment variables must be 1")
-    reference, verified = load_reference()
+    reference, verified = load_reference(reference)
     output.mkdir(parents=True)
     try:
         closure = source_closure()
@@ -438,7 +438,7 @@ def run(output, protocol):
             archive.write(protocol, "PROTOCOL.md")
         warnings.simplefilter("error", RuntimeWarning)
         records, preparation = [], []
-        with threadpool_limits(1), formal.load_formal_input(INPUT, MANIFEST,
+        with threadpool_limits(1), formal.load_formal_input(input_path, manifest,
                 expected_source_manifest_sha256=formal.FROZEN_FORMAL_MANIFEST_SHA256,
                 scratch_root=Path("/private/tmp")) as (data, identity):
             pools = threadpool_info()
@@ -504,9 +504,17 @@ def run(output, protocol):
         raise
 
 
-if __name__ == "__main__":
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=BASE / "paired_20seeds")
-    parser.add_argument("--protocol", type=Path, default=BASE / "PROTOCOL.md")
-    args = parser.parse_args()
-    run(args.output, args.protocol)
+    parser.add_argument("--protocol", type=Path, required=True, help="Original protocol file")
+    parser.add_argument("--input", dest="input_path", type=Path, required=True, help="Authenticated genotype NPZ archive")
+    parser.add_argument("--manifest", type=Path, help="Input manifest; defaults to the NPZ path with suffix .manifest.json")
+    parser.add_argument("--reference", type=Path, required=True, help="Authenticated full-SNP reference package")
+    args = parser.parse_args(argv)
+    return run(args.output, args.protocol, input_path=args.input_path,
+               reference=args.reference, manifest=args.manifest)
+
+
+if __name__ == "__main__":
+    main()

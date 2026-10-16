@@ -21,15 +21,14 @@ from sklearn.decomposition import PCA
 from threadpoolctl import threadpool_info, threadpool_limits
 
 ROOT = Path(__file__).resolve().parents[1]
-HISTORY = ROOT / "results/nonfed_2026-08-29"
 METHODS = ["pca_default", "pca_uncentered", "thresholded_pca_matched_sparsity",
            "vp_spca", "accelerated_vp_spca", "randomized_vp_spca", "certified_randomized_vp_spca"]
 SPARSE = METHODS[3:]
 SOURCE_BINDINGS = {
-    "vp": ("results/video_literal_2026-08-30_execution_source/src/rspca/vp.py",
+    "vp": (None,
            "cae985e15e87d5ebf88c9c68c7570ed10832df30ec1245b7b8031def2bd6b9c8"),
     "accelerated": ("src/rspca/accelerated.py", "594b17a826c0416f4f1b09b0c3228369a73e88a5c1ed80184ddfb09b7c5afcb7"),
-    "randomized": ("results/nonfed_2026-08-29/provenance/randomized_execution.py",
+    "randomized": (None,
                    "37b68488d25abf775f97ec7ed755a1f5b00aceaa6fd08e29d044fe01e39fe0c5"),
     "datasets": ("src/rspca/datasets.py", "4b72f51579616bf91b8bbdb4929d2caa41a330c3b104d42de5fa4e501532e154"),
     "metrics": ("src/rspca/metrics.py", "35f3be948cac70d34c1e180a7684f1e5c4c30d1b291fbd956d010d784c864dda"),
@@ -63,30 +62,37 @@ def write_json(path, value):
     Path(path).write_text(json.dumps(value, indent=2, allow_nan=False, default=convert)+"\n")
 
 
+def bind_sources(vp_source, randomized_source):
+    """Resolve supplied archives while retaining every historical byte hash."""
+    supplied = {"vp": Path(vp_source), "randomized": Path(randomized_source)}
+    return {name: (supplied[name] if relative is None else ROOT / relative, expected)
+            for name, (relative, expected) in SOURCE_BINDINGS.items()}
+
+
 @contextmanager
-def historical_modules():
+def historical_modules(bindings):
     """Import exactly the five bound historical modules, without current __init__."""
     prefix = "_ordinary_pca_historical_rspca"
     if any(name == prefix or name.startswith(prefix+".") for name in sys.modules):
         raise RuntimeError("Historical package already loaded")
-    for relative, expected in SOURCE_BINDINGS.values():
-        if digest(ROOT/relative) != expected:
-            raise ValueError(f"Historical source mismatch: {relative}")
+    for source, expected in bindings.values():
+        if digest(source) != expected:
+            raise ValueError(f"Historical source mismatch: {source}")
     package = ModuleType(prefix)
     package.__path__ = []
     sys.modules[prefix] = package
     loaded = {}
     try:
-        for short, (relative, _) in SOURCE_BINDINGS.items():
+        for short, (source, _) in bindings.items():
             name = prefix+"."+short
-            spec = importlib.util.spec_from_file_location(name, ROOT/relative)
+            spec = importlib.util.spec_from_file_location(name, source)
             module = importlib.util.module_from_spec(spec)
             sys.modules[name] = module
             # SourceFileLoader writes __pycache__ beside sealed historical
             # sources. Compile authenticated bytes directly so this import
             # cannot mutate an execution snapshot or its closed file set.
-            source_bytes = (ROOT/relative).read_bytes()
-            exec(compile(source_bytes, str(ROOT/relative), "exec", dont_inherit=True), module.__dict__)
+            source_bytes = source.read_bytes()
+            exec(compile(source_bytes, str(source), "exec", dont_inherit=True), module.__dict__)
             loaded[short] = module
         yield SimpleNamespace(**loaded)
     finally:
@@ -95,10 +101,11 @@ def historical_modules():
                 del sys.modules[name]
 
 
-def load_history():
+def load_history(history_root):
+    history_root = Path(history_root)
     history = {}
     for regime, sha in HISTORICAL_RESULT_SHA256.items():
-        path = HISTORY/f"spca/{regime}/results.json"
+        path = history_root/f"spca/{regime}/results.json"
         if digest(path) != sha:
             raise ValueError(f"Historical record mismatch: {regime}")
         value = strict_json(path)
@@ -313,17 +320,19 @@ def render_report(output, summary, reproduction, identities):
     (output/"README.md").write_text("\n".join(lines))
 
 
-def run(output, protocol):
+def run(output, protocol, *, history_root, vp_source, randomized_source):
     if sklearn.__version__ != "1.7.0":
         raise ValueError("This declared supplement requires sklearn 1.7.0")
-    history = load_history()
-    with historical_modules() as legacy:
+    history_root = Path(history_root)
+    bindings = bind_sources(vp_source, randomized_source)
+    history = load_history(history_root)
+    with historical_modules(bindings) as legacy:
         output.mkdir(parents=True, exist_ok=False)
         records, reproduction, identities = [], [], []
         try:
             spec = dict(status="prefit_exposed_seed_baseline_completion", methods=METHODS,
-                source_sha256={name: sha for name, (_, sha) in SOURCE_BINDINGS.items()},
-                source_paths={name: relative for name, (relative, _) in SOURCE_BINDINGS.items()},
+                source_sha256={name: sha for name, (_, sha) in bindings.items()},
+                source_paths={name: f"historical_rspca/{name}.py" for name in bindings},
                 runner_sha256=digest(Path(__file__)), protocol_sha256=digest(protocol),
                 historical_result_sha256=HISTORICAL_RESULT_SHA256,
                 regimes={regime: dict(config=h["config"], seeds=h["seed_manifest"]["seeds"],
@@ -334,13 +343,13 @@ def run(output, protocol):
                 historical_byte_identity_claim=False, primary_baseline="PCA(n_components=5); all other defaults unchanged")
             write_json(output/"specification_before_run.json", spec)
             with zipfile.ZipFile(output/"source_snapshot.zip", "w", zipfile.ZIP_DEFLATED) as archive:
-                for name, (relative, _) in SOURCE_BINDINGS.items():
-                    archive.write(ROOT/relative, f"historical_rspca/{name}.py")
+                for name, (source, _) in bindings.items():
+                    archive.write(source, f"historical_rspca/{name}.py")
                 archive.writestr("historical_rspca/__init__.py", "# Isolated historical module namespace.\n")
                 archive.write(Path(__file__), "spca_pca_comparison.py")
                 archive.write(protocol, "PROTOCOL.md")
                 for regime in history:
-                    archive.write(HISTORY/f"spca/{regime}/results.json", f"history/{regime}.json")
+                    archive.write(history_root/f"spca/{regime}/results.json", f"history/{regime}.json")
             warnings.simplefilter("error", RuntimeWarning)
             with threadpool_limits(1):
                 pools = threadpool_info()
@@ -398,9 +407,18 @@ def run(output, protocol):
             raise
 
 
-if __name__ == "__main__":
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--protocol", type=Path, required=True)
-    args = parser.parse_args()
-    run(args.output, args.protocol)
+    parser.add_argument("--history", dest="history_root", type=Path, required=True,
+                        help="Original result archive containing spca/clean and spca/corrupt")
+    parser.add_argument("--vp-source", type=Path, required=True, help="Historical VP-SPCA source file")
+    parser.add_argument("--randomized-source", type=Path, required=True, help="Historical randomized VP-SPCA source file")
+    args = parser.parse_args(argv)
+    return run(args.output, args.protocol, history_root=args.history_root,
+               vp_source=args.vp_source, randomized_source=args.randomized_source)
+
+
+if __name__ == "__main__":
+    main()
